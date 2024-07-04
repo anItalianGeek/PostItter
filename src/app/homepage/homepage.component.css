@@ -1,0 +1,36 @@
+* {
+  font-family: "Manrope", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#main {
+  position: relative;
+  left: 22%;
+  max-width: 78%;
+  height: 100%;
+}
+
+header {
+  z-index: 1;
+  position: sticky;
+  top: 0;
+  background-color: #f0f0f0;
+}
+
+header img {
+  transform: translateX(950%);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+app-post {
+  max-width: 600px;
+  height: auto;
+}

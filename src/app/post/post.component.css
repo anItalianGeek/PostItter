@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+  font-family: "Manrope", sans-serif;
+  background-color: whitesmoke;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li:hover {
+  cursor: pointer;
+}
+
+#actions ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 5px;
+  margin: 10px 10px 10px 0;
+}
+
+#actions li {
+  display: inline-block;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+}
+
+#actions li span {
+  margin: 0 5px;
+}
+
+#post {
+  width: 600px;
+  height: auto;
+  border: 1px solid darkgray;
+  margin: 5px;
+}
+
+.action-button {
+  display: none;
+  transition: 0.1s;
+}
+
+li:hover .action-button {
+  display: block;
+  background-color: black;
+  color: white;
+  width: 50px;
+  height: 20px;
+}
+
+#post-content {
+  border: 1px hidden;
+  border-radius: 20px;
+  background-color: #fafafa;
+  margin: 10px;
+  padding: 10px;
+}
+
+#user {
+  padding: 1px;
+  height: 74px;
+}
+
+#user #pfp {
+  float: left;
+  width: 64px;
+  height: 64px;
+  margin: 4px;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+#name {
+  margin-top: 15px;
+  margin-left: 80px;
+  width: 25%;
+}
+
+.options {
+  width: 25px;
+  height: 25px;
+  padding: 5px;
+  border-style: hidden;
+  border-radius: 50%;
+  transform: translate(491px, -42px);
+}
+
+.options:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+  border: 1px solid lightgray;
+}
+
+.dropdown {
+  position: absolute;
+  display: block;
+  width: 135px;
+  height: 75px;
+  border: 1px solid darkgray;
+  border-radius: 15px;
+  background-color: #f0f0f0;
+  transform: translate(420px, -80px);
+}
+
+.dropdown > div {
+  transform: translateY(1px);
+  border-radius: 10px;
+  margin: 3px;
+}
+
+.dropdown div div {
+  float: right;
+  padding: 2px;
+  margin: 1px;
+  transform: translateY(3px);
+  border-style: hidden;
+  border-radius: 7px;
+}
+
+.dropdown div:hover, .dropdown div:hover div {
+  background-color: #e6e6e6;
+}
+
+.dropdown img {
+  border-radius: 50%;
+  margin: 1px;
+}

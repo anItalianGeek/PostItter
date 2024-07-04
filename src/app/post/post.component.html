@@ -1,22 +1,41 @@
 <div id="post">
   <div id="user">
-    <div id="pfp"></div>
-    <p id="display-name"></p>
-    <p id="username"></p>
-    <div id="options">
-      <ul>
-        <li><span class="icon"></span>Report Post</li>
-        <li><span class="icon"></span>Report User</li>
-      </ul>
+    <div id="pfp">{{ post.user.profilePicture }}</div>
+    <p id="name"><span style="font-weight: bold">
+      {{ post.user.displayName }}</span><br>{{ post.user.username }}
+    </p>
+    <img src="/icons/menu-dots-vertical.svg" alt="user-options" width="4%" (click)="triggerUserOptions()"
+         class="options">
+    <div class="dropdown" *ngIf="userOptionsDropdownShown">
+      <div>
+        <span class="icon">
+          <img src="/icons/exclamation.svg" alt="exclamation" width="20%">
+        </span>
+        <div>Report Post</div>
+      </div>
+      <div>
+        <span class="icon">
+          <img src="/icons/cross-circle.svg" alt="cross" width="20%">
+        </span>
+        <div>Report User</div>
+      </div>
     </div>
   </div>
-  <p id="post-content"></p>
+  <p id="post-content">{{ post.body }}</p>
   <div id="actions">
     <ul>
-      <li><span class="icon"></span><span class="action-button">Like</span></li>
-      <li><span class="icon"></span><span class="action-button">Comment</span></li>
-      <li><span class="icon"></span><span class="action-button">Re-Post</span></li>
-      <li><span class="icon"></span><span class="action-button">Share</span></li>
+      <li>
+        <span class="icon"><img src="/icons/heart.svg" alt="like" width="25%" align="center"></span>Like
+      </li>
+      <li>
+        <span class="icon"><img src="/icons/comment-alt-middle.svg" alt="comment" width="25%" align="center"></span>Comment
+      </li>
+      <li>
+        <span class="icon"><img src="/icons/code-compare.svg" alt="share" width="25%" align="center"></span>Re-Post
+      </li>
+      <li>
+        <span class="icon"><img src="/icons/paper-plane.svg" alt="" width="25%" align="center"></span>Share
+      </li>
     </ul>
   </div>
 </div>

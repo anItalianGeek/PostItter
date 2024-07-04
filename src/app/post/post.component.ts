@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {Post} from "../../Post";
 
 @Component({
   selector: 'app-post',
@@ -6,5 +7,16 @@ import { Component } from '@angular/core';
   styleUrl: './post.component.css'
 })
 export class PostComponent {
+
+  @Input() post!: Post;
+  userOptionsDropdownShown: boolean;
+
+  constructor() {
+    this.userOptionsDropdownShown = false;
+  }
+
+  triggerUserOptions(): void {
+    this.userOptionsDropdownShown = !this.userOptionsDropdownShown;
+  }
 
 }
