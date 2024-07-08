@@ -1,0 +1,27 @@
+* {
+  font-family: "Manrope", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#main {
+  position: relative;
+  left: 22%;
+  max-width: 78%;
+  height: 100%;
+}
+
+header {
+  display: grid;
+  place-items: center;
+  top: 0;
+  min-height: 100px;
+  position: sticky;
+  z-index: 1;
+  background-color: #f0f0f0;
+}
+
+header img {
+  transform: translateY(-1px);
+}

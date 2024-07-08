@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-contact-us',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrl: './contact-us.component.css'
 })
 export class ContactUsComponent {
+
+  sendMessage(): void {
+
+  }
 
 }

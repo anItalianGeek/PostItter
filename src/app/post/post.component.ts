@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Post} from "../../Post";
+import {PostData} from "../../PostData";
 
 @Component({
   selector: 'app-post',
@@ -8,7 +8,7 @@ import {Post} from "../../Post";
 })
 export class PostComponent {
 
-  @Input() post!: Post;
+  @Input() post!: PostData;
   userOptionsDropdownShown: boolean;
 
   constructor() {

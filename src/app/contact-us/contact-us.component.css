@@ -1,0 +1,91 @@
+* {
+    font-family: "Manrope", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#main {
+    position: relative;
+    left: 22%;
+    max-width: 78%;
+    height: 100%;
+}
+
+header {
+    display: grid;
+    place-items: center;
+    top: 0;
+    min-height: 100px;
+    position: sticky;
+    z-index: 1;
+    background-color: #f0f0f0;
+}
+
+header img {
+    transform: translateY(-1px);
+}
+
+main {
+    position: relative;
+    transform: translate(50%, 10%);
+    max-width: 50%;
+    margin: 20px 0;
+}
+
+#info-page {
+    font-weight: lighter;
+    margin: 10px 0 50px 0;
+}
+
+#info-page h2 {
+    margin: 0 0 15px 0;
+}
+
+main div div {
+    display: inline-block;
+}
+
+.input-element {
+    padding: 10px;
+    display: grid;
+    place-items: center;
+}
+
+.input-element input, .input-element textarea {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    font-size: larger;
+    border: 1px solid #aaaaaa;
+    border-radius: 12px;
+}
+
+.input-element textarea {
+    resize: none;
+    width: 100%;
+    height: 100px;
+}
+
+.input-element input:focus {
+    border: none;
+    background-color: #f0f0f0;
+}
+
+#submit {
+    float: right;
+    border: 1px solid #aaaaaa;
+    border-radius: 25px;
+    padding: 15px 30px;
+    margin: 10px;
+    transition: 0.2s;
+}
+
+#submit:hover {
+    background-color: #f0f0f0;
+}
+
+#contact-mail {
+    margin: 15px;
+}

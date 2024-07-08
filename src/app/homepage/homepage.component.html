@@ -3,7 +3,9 @@
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
   <header>
-    <img src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="5%">
+    <img routerLink="" (click)="scrollToTop()" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo"
+         width="70px"
+         height="100px">
   </header>
   <main>
     <app-post *ngFor="let post of posts" [post]="post"></app-post>

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Post} from "../../Post";
+import {PostData} from "../../PostData";
 
 @Component({
   selector: 'app-homepage',
@@ -8,7 +8,7 @@ import {Post} from "../../Post";
 })
 export class HomepageComponent {
 
-  posts: Post[] = [];
+  posts: PostData[] = [];
 
   constructor() {
     this.posts.push({
@@ -70,6 +70,13 @@ export class HomepageComponent {
         username: 'tha best f1 racer',
         profilePicture: ''
       }
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
     });
   }
 

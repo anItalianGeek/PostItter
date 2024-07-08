@@ -19,6 +19,7 @@ const routes: Routes = [
   {path: 'search/trending', component: TrendingPostsComponent},
   {path: 'messages', component: MessagesDashboardComponent},
   {path: 'user-settings', component: UserSettingsComponent},
+  {path: 'users/:id', component: UserSettingsComponent},
   {path: 'about', component: AboutUsComponent},
   {path: 'contact', component: ContactUsComponent}
 ];

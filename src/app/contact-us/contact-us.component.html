@@ -1,1 +1,41 @@
-<p>contact-us works!</p>
+<div id="main">
+  <nav>
+    <app-navigation-side-bar></app-navigation-side-bar>
+  </nav>
+  <header>
+    <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
+         height="100px">
+  </header>
+  <main>
+    <div id="info-page">
+      <h2>Contact Devs</h2>
+      The "Contact Devs" page in the PostItter web app provides users with a convenient form to send messages directly
+      to the developers.
+      Users can fill out the form with their name, email address, and message. This allows them to share feedback,
+      report issues, or ask questions about the app.
+      The page ensures effective communication between the users and the development team, fostering a collaborative
+      environment for continuous improvement and support.
+    </div>
+    <div id="grid-container">
+      <div class="input-element" style="width: 50%">
+        <input type="text" name="first-name" id="_first-name" placeholder="Your First Name" required>
+      </div>
+      <div class="input-element" style="width: 50%">
+        <input type="text" name="last-name" id="_last-name" placeholder="Your Last Name" required>
+      </div>
+      <div class="input-element" style="width: 100%">
+        <input type="number" name="number" id="_number" placeholder="Your phone number" required>
+      </div>
+      <div class="input-element" style="width: 100%">
+        <input type="text" name="email" id="_email" placeholder="Your Email" required>
+      </div>
+      <div class="input-element" style="width: 100%">
+        <textarea placeholder="Your message" required></textarea>
+      </div>
+      <div id="submit" (click)="sendMessage()">Send Message</div>
+    </div>
+    <div id="contact-mail">
+      For any specific purposes, you can send an email to <a href="mailto:ognjenvasic70@gmail.com">ognjenvasic70&#64;gmail.com</a>
+    </div>
+  </main>
+</div>

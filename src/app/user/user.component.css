@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+  font-family: "Manrope", sans-serif;
+  background-color: whitesmoke;
+  margin: 0;
+  padding: 0;
+}
+
+.action-button {
+  display: none;
+  transition: 0.1s;
+}
+
+#main {
+  padding: 1px;
+  height: auto;
+  min-height: 75px;
+  max-width: 600px;
+  width: 600px;
+}
+
+#main #pfp {
+  float: left;
+  width: 64px;
+  height: 64px;
+  margin: 4px;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+#name {
+  margin-top: 15px;
+  margin-left: 80px;
+  width: 75%;
+}

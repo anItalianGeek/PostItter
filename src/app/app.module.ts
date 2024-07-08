@@ -14,6 +14,8 @@ import { MessagesDashboardComponent } from './messages-dashboard/messages-dashbo
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { UserComponent } from './user/user.component';
+import { UserDetailsComponent } from './user-details/user-details.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
     MessagesDashboardComponent,
     UserSettingsComponent,
     AboutUsComponent,
-    ContactUsComponent
+    ContactUsComponent,
+    UserComponent,
+    UserDetailsComponent
   ],
   imports: [
     BrowserModule,

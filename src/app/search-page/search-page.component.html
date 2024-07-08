@@ -3,6 +3,29 @@
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
   <header>
-    <img src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="5%">
+    <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
+         height="100px">
   </header>
+  <main>
+    <div id="user-search-key">
+      <div class="search-container">
+        <span class="search-icon"><img src="/icons/search.svg" alt="search-icon" width="16"></span>
+        <input type="text" name="search-bar" id="searchBar" #searchBar placeholder="Search for Anything"
+               (keyup)="pushTerm()">
+      </div>
+    </div>
+    <div id="filters" #filters>
+      <div>Filter by:</div>
+      <ul>
+        <li (click)="changeFilter(0)">Users</li>
+        <li (click)="changeFilter(1)">Posts</li>
+        <li (click)="changeFilter(2)">Hashtags</li>
+        <li (click)="changeFilter(3)" class="selected">Anything</li> <!-- by default there are no filters applied -->
+      </ul>
+    </div>
+  </main>
+  <article>
+    <app-user *ngFor="let user of users" [user]="user"></app-user>
+    <app-post *ngFor="let post of posts" [post]="post"></app-post>
+  </article>
 </div>
