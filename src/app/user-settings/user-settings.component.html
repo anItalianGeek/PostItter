@@ -6,4 +6,92 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
+  <main>
+    <div id="user-info">
+      <div id="pfp" class="inline-blk"><img src="{{user.profilePicture}}" alt="user-pfp"
+                                            style="border-radius: 50%" width="128px" height="128px"></div>
+      <div id="names" class="inline-blk">
+        <div id="username"><small>Username:</small> {{ user.username }}</div>
+        <div id="display-name"><small>Display Name:</small> {{ user.displayName }}</div>
+        <div id="bio"><small>Bio:</small> {{ user.bio }}</div>
+      </div>
+    </div>
+    <div id="essentials">
+      <h2>Essentials</h2>
+      <div id="change-username">
+        <span class="inline-blk">Change Username</span>
+        <input type="text" placeholder="{{user.username}}">
+        <div class="button" (click)="changeUsername()">Change Username</div>
+      </div>
+      <div id="change-display-name">
+        <span class="inline-blk">Change Display Name</span>
+        <input type="text" placeholder="{{user.displayName}}">
+        <div class="button" (click)="changeDisplayName()">Change Display Name</div>
+      </div>
+      <div id="change-bio">
+        <span class="inline-blk">Change Bio</span>
+        <input type="text" placeholder="{{user.bio}}">
+        <div class="button" (click)="changeBio()">Change Bio</div>
+      </div>
+    </div>
+    <div id="appearence">
+      <h2>Appearence</h2>
+      <div id="darkmode">
+        <span class="inline-blk">Dark Mode</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch0" type="checkbox" class="switch"
+                   (click)="toggleDarkMode($event)" #everyoneCanText>
+            <label for="switch0">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="privacy">
+      <h2>Privacy</h2>
+      <div id="private-profile">
+        <span class="inline-blk">Private Profile</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch" type="checkbox" class="switch"
+                   (click)="togglePrivateProfile($event)" #privateProfile>
+            <label for="switch">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="everyone-can-text" *ngIf="!user.privateProfile">
+        <span class="inline-blk">Everyone Can Text You</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch1" type="checkbox" class="switch"
+                   (click)="toggleTextsFromAll($event)" #everyoneCanText>
+            <label for="switch1">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div id="message" *ngIf="!user.privateProfile && !user.everyoneCanText" class="inline-blk"
+             style="font-style: italic">Only your followers
+          will be able to text
+          you.
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-notifications-dashboard',
@@ -6,5 +7,17 @@ import { Component } from '@angular/core';
   styleUrl: './notifications-dashboard.component.css'
 })
 export class NotificationsDashboardComponent {
+
+  constructor(private router: Router) {
+    let token = localStorage.getItem('authToken');
+    if (token === null) {
+      router.navigateByUrl('/login');
+    } else {
+      token = JSON.parse(token);
+      // @ts-ignore
+      if (Date.now() > token.expiryDate)
+        router.navigateByUrl('/login');
+    }
+  }
 
 }

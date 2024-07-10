@@ -1,9 +1,12 @@
 import {UserData} from "./UserData";
 
 export interface PostData {
-  id: string;
-  title: string;
   body: string | PostData;
+  comments?: { user: UserData, content: string }[];
   hashtags?: string[];
+  id: string;
+  likes: number;
+  reposts: number;
+  shares: number;
   user: UserData;
 }

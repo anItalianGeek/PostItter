@@ -1,1 +1,55 @@
-<p>user-details works!</p>
+<div id="main">
+  <nav>
+    <app-navigation-side-bar></app-navigation-side-bar>
+  </nav>
+  <header>
+    <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
+         height="100px">
+  </header>
+  <main>
+    <div id="user-info">
+      <img src="{{user.profilePicture}}" alt="" class="inline-blk" id="pfp">
+      <div class="inline-blk buttons" style="font-size: larger">
+        <p style="font-weight: bold; justify-content: start;">{{ user.username }}</p>
+        <p style="justify-content: start">{{ user.displayName }}</p>
+      </div>
+      <div class="inline-blk">
+        <div style="display: flex; justify-content: space-between">
+          <div class="inline-blk" style="width: 175px">
+            <div class="button" style="background-color: #f0f0f0">Follow</div>
+            <div class="button" style="background-color: whitesmoke">Message</div>
+          </div>
+          <div class="inline-blk">
+            <div class="inline-blk">
+              <p>Posts</p>
+              <p *ngIf="user.posts">{{ user.posts?.length }}</p>
+              <p *ngIf="!user.posts">0</p>
+            </div>
+            <div class="inline-blk">
+              <p>Followers</p>
+              <p>{{ user.followers }}</p>
+            </div>
+            <div class="inline-blk">
+              <p>Following</p>
+              <p>{{ user.following }}</p>
+            </div>
+            <div class="dropdown" *ngIf="userBlockOption">
+              <div class="dropdown-option">
+                <img src="/icons/ban.svg" alt="exclamation" width="20%">
+                <div>Block User</div>
+              </div>
+              <div class="dropdown-option">
+                <img src="/icons/cross-circle.svg" alt="cross" width="20%">
+                <div>Report User</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <img src="/icons/menu-dots-vertical.svg" alt="" width="24px" id="triggerUserOptions" (click)="showUserOptions()">
+    </div>
+    <div id="flex-container-posts" *ngIf="user.posts">
+      <app-post *ngFor="let post of user.posts" [post]="post"></app-post>
+    </div>
+  </main>
+</div>

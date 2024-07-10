@@ -7,15 +7,17 @@ import {HomepageComponent} from './homepage/homepage.component';
 import {NavigationSideBarComponent} from './navigation-side-bar/navigation-side-bar.component';
 import {PostComponent} from './post/post.component';
 import {NgOptimizedImage} from "@angular/common";
-import { NotificationsDashboardComponent } from './notifications-dashboard/notifications-dashboard.component';
-import { SearchPageComponent } from './search-page/search-page.component';
-import { TrendingPostsComponent } from './trending-posts/trending-posts.component';
-import { MessagesDashboardComponent } from './messages-dashboard/messages-dashboard.component';
-import { UserSettingsComponent } from './user-settings/user-settings.component';
-import { AboutUsComponent } from './about-us/about-us.component';
-import { ContactUsComponent } from './contact-us/contact-us.component';
-import { UserComponent } from './user/user.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
+import {NotificationsDashboardComponent} from './notifications-dashboard/notifications-dashboard.component';
+import {SearchPageComponent} from './search-page/search-page.component';
+import {TrendingPostsComponent} from './trending-posts/trending-posts.component';
+import {MessagesDashboardComponent} from './messages-dashboard/messages-dashboard.component';
+import {UserSettingsComponent} from './user-settings/user-settings.component';
+import {AboutUsComponent} from './about-us/about-us.component';
+import {ContactUsComponent} from './contact-us/contact-us.component';
+import {UserComponent} from './user/user.component';
+import {UserDetailsComponent} from './user-details/user-details.component';
+import {LoginComponent} from './login/login.component';
+import {PostDetailComponent} from './post-detail/post-detail.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     AboutUsComponent,
     ContactUsComponent,
     UserComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    LoginComponent,
+    PostDetailComponent
   ],
   imports: [
     BrowserModule,

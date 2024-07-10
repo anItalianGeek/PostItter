@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 import {UserData} from "../../UserData";
 import {PostData} from "../../PostData";
 import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-search-page',
@@ -9,6 +10,18 @@ import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap} 
   styleUrl: './search-page.component.css'
 })
 export class SearchPageComponent implements OnInit, AfterViewInit {
+
+  constructor(private router: Router) {
+    let token = localStorage.getItem('authToken');
+    if (token === null) {
+      router.navigateByUrl('/login');
+    } else {
+      token = JSON.parse(token);
+      // @ts-ignore
+      if (Date.now() > token.expiryDate)
+        router.navigateByUrl('/login');
+    }
+  }
 
   activatedFilter: number = 3;
   @ViewChild('filters', {static: false}) searchFilters!: ElementRef<HTMLElement>;
@@ -41,7 +54,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   }
 
   retrieveData(keyword: string): Observable<any> {
-    return of([]); // not implemented yet
+    return of([]); // TODO not implemented yet
   }
 
 }

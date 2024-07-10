@@ -8,70 +8,57 @@ import {PostData} from "../../PostData";
 })
 export class HomepageComponent {
 
-  posts: PostData[] = [];
+  posts: PostData[] = [
+    {
+      body: 'la formula 1 non è il wrestling',
+      comments: [
+        {
+          user: {
+            darkMode: true,
+            displayName: 'cristian horner',
+            email: 'example@example.com',
+            everyoneCanText: false,
+            followers: 104,
+            following: 69,
+            id: 'efdvsvd',
+            privateProfile: false,
+            profilePicture: '',
+            username: 'best tp fr'
+          },
+          content: 'real'
+        }
+      ],
+      hashtags: ['formula1', 'formula2', 'formula3', 'mclaren', 'ferrari', 'cristianHorny'],
+      id: 'efe',
+      likes: 104,
+      reposts: 69,
+      shares: 10469,
+      user: {
+        darkMode: true,
+        displayName: 'giuly',
+        email: 'example@example.com',
+        everyoneCanText: false,
+        followers: 104,
+        following: 69,
+        id: 'rerv',
+        privateProfile: false,
+        profilePicture: '',
+        username: 'skill issue'
+      }
+    }
+  ];
 
-  constructor() {
-    this.posts.push({
-      title: "Billa",
-      id: "0",
-      body: "mi manca sofia",
-      user: {
-        id: 1,
-        email: 'example@example.com',
-        displayName: 'max verstappen',
-        username: 'tha best f1 racer',
-        profilePicture: ''
-      }
-    });
-    this.posts.push({
-      title: "Billa",
-      id: "0",
-      body: "mi manca sofia",
-      user: {
-        id: 1,
-        email: 'example@example.com',
-        displayName: 'max verstappen',
-        username: 'tha best f1 racer',
-        profilePicture: ''
-      }
-    });
-    this.posts.push({
-      title: "Billa",
-      id: "0",
-      body: "mi manca sofia",
-      user: {
-        id: 1,
-        email: 'example@example.com',
-        displayName: 'max verstappen',
-        username: 'tha best f1 racer',
-        profilePicture: ''
-      }
-    });
-    this.posts.push({
-      title: "Billa",
-      id: "0",
-      body: "mi manca sofia",
-      user: {
-        id: 1,
-        email: 'example@example.com',
-        displayName: 'max verstappen',
-        username: 'tha best f1 racer',
-        profilePicture: ''
-      }
-    });
-    this.posts.push({
-      title: "Billa",
-      id: "0",
-      body: "mi manca sofia",
-      user: {
-        id: 1,
-        email: 'example@example.com',
-        displayName: 'max verstappen',
-        username: 'tha best f1 racer',
-        profilePicture: ''
-      }
-    });
-  }
+  /*constructor(private router: Router) {
+    let token = localStorage.getItem('authToken');
+    if (token === null) {
+      router.navigateByUrl('/login');
+    } else {
+      token = JSON.parse(token);
+      // @ts-ignore
+      if (Date.now() > token.expiryDate)
+        router.navigateByUrl('/login');
+    }
+  }*/
 
   scrollToTop(): void {
     window.scrollTo({
