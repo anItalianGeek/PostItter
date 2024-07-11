@@ -54,7 +54,8 @@ export class NotificationsDashboardComponent {
   } */
 
   clearNotifications() {
-    this.myself.notifications = [];
+    if (confirm('Are you really sure you want to delete all notifications?'))
+      this.myself.notifications = [];
   }
 
 }

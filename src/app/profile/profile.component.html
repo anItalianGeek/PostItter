@@ -6,4 +6,46 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
+  <main>
+    <div id="user-info">
+      <img src="{{user.profilePicture}}" alt="" class="inline-blk" id="pfp">
+      <div class="inline-blk buttons" style="font-size: larger">
+        <p style="font-weight: bold; justify-content: start;">{{ user.username }}</p>
+        <p style="justify-content: start">{{ user.displayName }}</p>
+      </div>
+      <div class="inline-blk">
+        <div style="display: flex; justify-content: space-between">
+          <div class="inline-blk">
+            <div class="inline-blk">
+              <p>Posts</p>
+              <p *ngIf="user.posts">{{ user.posts?.length }}</p>
+              <p *ngIf="!user.posts">0</p>
+            </div>
+            <div class="inline-blk">
+              <p>Followers</p>
+              <p *ngIf="user.followers">{{ user.followers?.length }}</p>
+              <p *ngIf="!user.followers">0</p>
+            </div>
+            <div class="inline-blk">
+              <p>Following</p>
+              <p *ngIf="user.following">{{ user.following?.length }}</p>
+              <p *ngIf="!user.following">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="inline-blk" id="filters" #filters>
+        <ul>
+          <div class="inline-blk">Filter:</div>
+          <li class="inline-blk" (click)="changeFilter(0)">Likes</li>
+          <li class="inline-blk" (click)="changeFilter(1)">Comments</li>
+          <li class="inline-blk" (click)="changeFilter(2)">Reposts</li>
+          <li class="inline-blk selected" (click)="changeFilter(3)">None</li>
+        </ul>
+      </div>
+    </div>
+    <div id="flex-container-posts">
+      <app-post *ngFor="let post of user.posts" [post]="post"></app-post>
+    </div>
+  </main>
 </div>
