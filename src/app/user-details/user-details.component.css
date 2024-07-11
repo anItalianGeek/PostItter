@@ -26,11 +26,8 @@ header img {
   transform: translateY(-1px);
 }
 
-main * {
-  border: 1px solid red;
-}
-
 #user-info {
+  position: relative;
   display: flex;
   align-items: center;
 }
@@ -64,22 +61,75 @@ main * {
   font-weight: bold;
 }
 
-.button {
+.action-buttons {
   width: 100%;
+  margin: 5px 0;
   padding: 10px 15px;
   text-align: center;
-  border-style: hidden;
+  border: 1px solid lightgray;
+  background-color: whitesmoke;
   border-radius: 20px;
 }
 
-/* TODO make the buttons change color when hovered */
+.action-buttons:first-child {
+  background-color: #f0f0f0;
+}
+
+.action-buttons:last-child {
+  background-color: whitesmoke;
+}
+
+.action-buttons:hover {
+  background-color: #e6e6e6;
+}
 
 #triggerUserOptions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
   border: 1px solid darkgray;
   border-radius: 50%;
-  padding: 2px;
+  padding: 3px;
 }
 
 #triggerUserOptions:hover {
   background-color: #e6e6e6;
+}
+
+.dropdown {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  visibility: hidden;
+  width: 135px;
+  height: 75px;
+  border: 1px solid darkgray;
+  border-radius: 15px;
+  background-color: #f0f0f0;
+}
+
+.dropdown-option {
+  max-height: 30px;
+  height: 30px;
+  transform: translateY(1px);
+  border-radius: 10px;
+  margin: 3px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.dropdown-option div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+}
+
+.dropdown div:hover, .dropdown div:hover div {
+  background-color: #e6e6e6;
+}
+
+.dropdown img {
+  border-radius: 50%;
+  margin: 0 1px;
 }

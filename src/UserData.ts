@@ -1,4 +1,5 @@
 import {PostData} from "./PostData";
+import {NotificationData} from "./NotificationData";
 
 export interface UserData {
   bio?: string;
@@ -7,11 +8,11 @@ export interface UserData {
   displayName: string;
   email: string;
   everyoneCanText: boolean;
-  followers: number;
-  following: number;
+  followers?: string[];
+  following?: string[];
   id: string;
-  likedPosts?: PostData[];
-  notifications?: { type: string; user: UserData, message: string }[];
+  likedPosts?: PostData[]; // TODO i could put here the posts where i have commented but not liked
+  notifications?: NotificationData[];
   posts?: PostData[];
   privateProfile: boolean;
   profilePicture: string;

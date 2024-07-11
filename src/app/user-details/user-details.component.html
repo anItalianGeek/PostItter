@@ -16,8 +16,8 @@
       <div class="inline-blk">
         <div style="display: flex; justify-content: space-between">
           <div class="inline-blk" style="width: 175px">
-            <div class="button" style="background-color: #f0f0f0">Follow</div>
-            <div class="button" style="background-color: whitesmoke">Message</div>
+            <div class="action-buttons" (click)="follow()">Follow</div>
+            <div class="action-buttons" (click)="message()" *ngIf="userCanText('here goes active user')">Message</div>
           </div>
           <div class="inline-blk">
             <div class="inline-blk">
@@ -27,19 +27,21 @@
             </div>
             <div class="inline-blk">
               <p>Followers</p>
-              <p>{{ user.followers }}</p>
+              <p *ngIf="user.followers">{{ user.followers?.length }}</p>
+              <p *ngIf="!user.followers">0</p>
             </div>
             <div class="inline-blk">
               <p>Following</p>
-              <p>{{ user.following }}</p>
+              <p *ngIf="user.following">{{ user.following?.length }}</p>
+              <p *ngIf="!user.following">0</p>
             </div>
-            <div class="dropdown" *ngIf="userBlockOption">
-              <div class="dropdown-option">
-                <img src="/icons/ban.svg" alt="exclamation" width="20%">
+            <div class="dropdown inline-blk" #dropdown>
+              <div class="dropdown-option" (click)="block()">
+                <img src="/icons/ban.svg" alt="exclamation" width="26px">
                 <div>Block User</div>
               </div>
-              <div class="dropdown-option">
-                <img src="/icons/cross-circle.svg" alt="cross" width="20%">
+              <div class="dropdown-option" (click)="report()">
+                <img src="/icons/cross-circle.svg" alt="cross" width="26px">
                 <div>Report User</div>
               </div>
             </div>
@@ -48,7 +50,7 @@
       </div>
       <img src="/icons/menu-dots-vertical.svg" alt="" width="24px" id="triggerUserOptions" (click)="showUserOptions()">
     </div>
-    <div id="flex-container-posts" *ngIf="user.posts">
+    <div id="flex-container-posts" *ngIf="canUserSeePosts('here goes active user')">
       <app-post *ngFor="let post of user.posts" [post]="post"></app-post>
     </div>
   </main>

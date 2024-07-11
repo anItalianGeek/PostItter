@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
+import {NotificationData} from "../../NotificationData";
 
 @Component({
   selector: 'app-notifications-dashboard',
@@ -8,7 +8,40 @@ import {Router} from "@angular/router";
 })
 export class NotificationsDashboardComponent {
 
-  constructor(private router: Router) {
+  // myself variable from localstorage
+  myself: { notifications: NotificationData[] } = {
+    notifications: [
+      {
+        type: 'new-follow',
+        user: {
+          darkMode: true,
+          displayName: 'cristian horner',
+          email: 'example@example.com',
+          everyoneCanText: false,
+          id: 'efdvsvd',
+          privateProfile: false,
+          profilePicture: '',
+          username: 'best tp fr'
+        }
+      },
+      {
+        type: 'new-like',
+        user: {
+          darkMode: true,
+          displayName: 'cristian horner',
+          email: 'example@example.com',
+          everyoneCanText: false,
+          id: 'efdvsvd',
+          privateProfile: false,
+          profilePicture: '',
+          username: 'best tp fr'
+        },
+        postId: 'dummy'
+      }
+    ]
+  };
+
+  /* constructor(private router: Router) {
     let token = localStorage.getItem('authToken');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -18,6 +51,10 @@ export class NotificationsDashboardComponent {
       if (Date.now() > token.expiryDate)
         router.navigateByUrl('/login');
     }
+  } */
+
+  clearNotifications() {
+    this.myself.notifications = [];
   }
 
 }

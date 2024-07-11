@@ -9,7 +9,6 @@ import {PostComponent} from './post/post.component';
 import {NgOptimizedImage} from "@angular/common";
 import {NotificationsDashboardComponent} from './notifications-dashboard/notifications-dashboard.component';
 import {SearchPageComponent} from './search-page/search-page.component';
-import {TrendingPostsComponent} from './trending-posts/trending-posts.component';
 import {MessagesDashboardComponent} from './messages-dashboard/messages-dashboard.component';
 import {UserSettingsComponent} from './user-settings/user-settings.component';
 import {AboutUsComponent} from './about-us/about-us.component';
@@ -18,6 +17,8 @@ import {UserComponent} from './user/user.component';
 import {UserDetailsComponent} from './user-details/user-details.component';
 import {LoginComponent} from './login/login.component';
 import {PostDetailComponent} from './post-detail/post-detail.component';
+import {NotificationComponent} from './notification/notification.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,6 @@ import {PostDetailComponent} from './post-detail/post-detail.component';
     PostComponent,
     NotificationsDashboardComponent,
     SearchPageComponent,
-    TrendingPostsComponent,
     MessagesDashboardComponent,
     UserSettingsComponent,
     AboutUsComponent,
@@ -35,7 +35,9 @@ import {PostDetailComponent} from './post-detail/post-detail.component';
     UserComponent,
     UserDetailsComponent,
     LoginComponent,
-    PostDetailComponent
+    PostDetailComponent,
+    NotificationComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
