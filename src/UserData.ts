@@ -11,7 +11,8 @@ export interface UserData {
   followers?: string[];
   following?: string[];
   id: string;
-  likedPosts?: PostData[]; // TODO i could put here the posts where i have commented but not liked
+  likedPosts?: PostData[];
+  commentedPosts?: PostData[];
   notifications?: NotificationData[];
   posts?: PostData[];
   privateProfile: boolean;
