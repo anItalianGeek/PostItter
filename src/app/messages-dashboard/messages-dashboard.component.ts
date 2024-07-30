@@ -9,13 +9,13 @@ import {Router} from "@angular/router";
 export class MessagesDashboardComponent {
 
   constructor(private router: Router) {
-    let token = localStorage.getItem('authToken');
+    let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
     } else {
       token = JSON.parse(token);
       // @ts-ignore
-      if (Date.now() > token.expiryDate)
+      if (Math.floor(Date.now() / 1000) > token.exp)
         router.navigateByUrl('/login');
     }
   }

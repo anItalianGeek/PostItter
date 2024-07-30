@@ -17,13 +17,13 @@ export class UserSettingsComponent implements AfterViewInit {
   // TODO make sure to allow name changes by adding view child elements and finish more things related to posts if necessary
 
   constructor(private router: Router) {
-    let token = localStorage.getItem('authToken');
+    let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
     } else {
       token = JSON.parse(token);
       // @ts-ignore
-      if (Date.now() > token.expiryDate)
+      if (Math.floor(Date.now() / 1000) > token.exp)
         router.navigateByUrl('/login');
     }
   }

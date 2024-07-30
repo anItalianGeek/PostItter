@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NotificationData} from "../../NotificationData";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-notifications-dashboard',
@@ -41,17 +42,17 @@ export class NotificationsDashboardComponent {
     ]
   };
 
-  /* constructor(private router: Router) {
-    let token = localStorage.getItem('authToken');
+  constructor(private router: Router) {
+    let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
     } else {
       token = JSON.parse(token);
       // @ts-ignore
-      if (Date.now() > token.expiryDate)
+      if (Math.floor(Date.now() / 1000) > token.exp)
         router.navigateByUrl('/login');
     }
-  } */
+  }
 
   clearNotifications() {
     if (confirm('Are you really sure you want to delete all notifications?'))

@@ -1,5 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {UserData} from "../../UserData";
+import {UserService} from "../../services/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-details',
@@ -26,7 +28,7 @@ export class UserDetailsComponent {
     posts: []
   }
 
-  constructor() {
+  constructor(private router: Router, private userService: UserService) {
     this.user.posts?.push(
       {
         body: 'la formula 1 non è il wrestling',
@@ -52,7 +54,18 @@ export class UserDetailsComponent {
         shares: 10469,
         user: this.user
       }
-    )
+    );
+
+    let token = localStorage.getItem('auth-token');
+    if (token === null) {
+      router.navigateByUrl('/login');
+    } else {
+      token = JSON.parse(token);
+      // @ts-ignore
+      if (Math.floor(Date.now() / 1000) > token.exp)
+        router.navigateByUrl('/login');
+    }
+
   }
 
   /* constructor(private router: Router) {
@@ -75,20 +88,34 @@ export class UserDetailsComponent {
       this.dropdown.nativeElement.style.visibility = 'hidden';
   }
 
-  canUserSeePosts(currentId: string): boolean { // TODO this method might be useless because depends on what the backend server is going to return
-    if (this.user.following?.find(element => element === currentId) || !this.user.privateProfile) {
-      return this.user.posts === undefined;
-    }
-    return false;
+  canUserSeePosts(currentId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.userService.getUserById(currentId).subscribe({
+        next: result => {
+          if (this.user.following?.find(element => element === result) || !this.user.privateProfile) {
+            resolve(this.user.posts !== undefined);
+          } else {
+            resolve(false);
+          }
+        }
+      });
+    });
   }
 
-  userCanText(currentId: string): boolean {
-    if (!this.user.privateProfile && this.user.everyoneCanText)
-      return true;
-    else if (this.user.following?.find(element => element === currentId)) // TODO must absolutely fix this after adding the tokens
-      return true;
-    else
-      return false;
+
+  userCanText(currentId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.userService.getUserById(currentId).subscribe({
+        next: result => {
+          if (!this.user.privateProfile && this.user.everyoneCanText)
+            return true;
+          else if (this.user.following?.find(element => element === result))
+            return true;
+          else
+            return false;
+        }
+      });
+    });
   }
 
   follow(): void {

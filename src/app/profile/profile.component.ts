@@ -1,5 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {UserData} from "../../UserData";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +27,7 @@ export class ProfileComponent {
     posts: []
   }
 
-  constructor() {
+  constructor(private router: Router) {
     this.user.posts?.push(
       {
         body: 'la formula 1 non è il wrestling',
@@ -53,6 +54,16 @@ export class ProfileComponent {
         user: this.user
       }
     )
+
+    let token = localStorage.getItem('auth-token');
+    if (token === null) {
+      router.navigateByUrl('/login');
+    } else {
+      token = JSON.parse(token);
+      // @ts-ignore
+      if (Math.floor(Date.now() / 1000) > token.exp)
+        router.navigateByUrl('/login');
+    }
   }
 
   changeFilter(index: number): void {

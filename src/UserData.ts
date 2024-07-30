@@ -4,15 +4,15 @@ import {NotificationData} from "./NotificationData";
 export interface UserData {
   bio?: string;
   blockedUsers?: UserData[];
+  commentedPosts?: PostData[];
   darkMode: boolean;
   displayName: string;
   email: string;
   everyoneCanText: boolean;
-  followers?: string[];
-  following?: string[];
+  followers?: UserData[];
+  following?: UserData[];
   id: string;
   likedPosts?: PostData[];
-  commentedPosts?: PostData[];
   notifications?: NotificationData[];
   posts?: PostData[];
   privateProfile: boolean;

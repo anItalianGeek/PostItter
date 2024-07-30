@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {PostData} from "../../PostData";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-post-detail',
@@ -46,17 +47,17 @@ export class PostDetailComponent {
     }
   }
 
-  /*constructor(private router: Router) {
-    let token = localStorage.getItem('authToken');
+  constructor(private router: Router) {
+    let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
     } else {
       token = JSON.parse(token);
       // @ts-ignore
-      if (Date.now() > token.expiryDate)
+      if (Math.floor(Date.now() / 1000) > token.exp)
         router.navigateByUrl('/login');
     }
-  } */
+  }
 
   triggerUserOptions(): void {
     this.userOptionsDropdownShown = !this.userOptionsDropdownShown;
