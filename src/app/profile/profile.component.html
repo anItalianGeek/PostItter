@@ -6,30 +6,33 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
-  <main>
+  <main *ngIf="!isLoaded">
+    <app-loader></app-loader>
+  </main>
+  <main *ngIf="isLoaded">
     <div id="user-info">
-      <img src="{{user.profilePicture}}" alt="" class="inline-blk" id="pfp">
+      <img src="{{user?.profilePicture || 'blank.jpeg'}}" alt="" class="inline-blk" id="pfp">
       <div class="inline-blk buttons" style="font-size: larger">
-        <p style="font-weight: bold; justify-content: start;">{{ user.username }}</p>
-        <p style="justify-content: start">{{ user.displayName }}</p>
+        <p style="font-weight: bold; justify-content: start;">{{ user?.username }}</p>
+        <p style="justify-content: start">{{ user?.displayName }}</p>
       </div>
       <div class="inline-blk">
         <div style="display: flex; justify-content: space-between">
           <div class="inline-blk">
             <div class="inline-blk">
               <p>Posts</p>
-              <p *ngIf="user.posts">{{ user.posts?.length }}</p>
-              <p *ngIf="!user.posts">0</p>
+              <p *ngIf="user?.posts">{{ user?.posts?.length }}</p>
+              <p *ngIf="!user?.posts">0</p>
             </div>
             <div class="inline-blk">
               <p>Followers</p>
-              <p *ngIf="user.followers">{{ user.followers?.length }}</p>
-              <p *ngIf="!user.followers">0</p>
+              <p *ngIf="user?.followers">{{ user?.followers?.length }}</p>
+              <p *ngIf="!user?.followers">0</p>
             </div>
             <div class="inline-blk">
               <p>Following</p>
-              <p *ngIf="user.following">{{ user.following?.length }}</p>
-              <p *ngIf="!user.following">0</p>
+              <p *ngIf="user?.following">{{ user?.following?.length }}</p>
+              <p *ngIf="!user?.following">0</p>
             </div>
           </div>
         </div>
@@ -45,7 +48,29 @@
       </div>
     </div>
     <div id="flex-container-posts">
-      <app-post *ngFor="let post of user.posts" [post]="post"></app-post>
+      <app-post *ngFor="let post of user?.posts" [post]="post"></app-post>
     </div>
+
+    <div id="show-followers-overlay" *ngIf="showAllFollowers">
+      <div id="followers-modal">
+        <div><img src="/icons/cross.svg" alt="" width="20%"
+                  style="float: right; border-radius: 50%; background: #aaaaaa" (click)="closeFollowersWindow()"></div>
+        <h3>{{ user.username }}'s Followers</h3>
+        <div *ngIf="!user.followers || user.followers == 0" style="font-size: smaller">No followers</div>
+        <app-user *ngFor="let user of user.followers" [user]="user" routerLink="/users/{{user.id}}"></app-user>
+      </div>
+    </div>
+
+    <div id="show-following-overlay" *ngIf="showAllFollowing">
+      <div id="following-modal">
+        <div><img src="/icons/cross.svg" alt="" width="20%"
+                  style="float: right; border-radius: 50%; background: #aaaaaa" (click)="closeFollowingWindow()"></div>
+        <h3>{{ user.username }}'s Followings</h3>
+        <div *ngIf="!user.following || user.following == 0" style="font-size: smaller">No followings</div>
+        <app-user *ngFor="let user of user.following" [user]="user" routerLink="/users/{{user.id}}"></app-user>
+      </div>
+    </div>
+
   </main>
 </div>
+<!-- routerLink="posts/{{post.id}}" -->

@@ -1,7 +1,8 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {UserData} from "../../UserData";
 import {UserService} from "../../services/user.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {UserData} from "../../UserData";
+import {PostData} from "../../PostData";
 
 @Component({
   selector: 'app-user-details',
@@ -10,75 +11,41 @@ import {Router} from "@angular/router";
 })
 export class UserDetailsComponent {
 
-  // TODO well.... the user will be retrieved using it's id
-  // user!: UserData;
+  isLoaded: boolean = false;
   @ViewChild('dropdown', {static: false}) dropdown!: ElementRef<HTMLElement>;
   userBlockOption: boolean = false;
+  showReportWindow: boolean = false;
+  showCommentWindow: boolean = false;
+  showShareWindow: boolean = false;
+  showAllFollowers: boolean = false;
+  showAllFollowing: boolean = false;
+  lastClickedPost!: PostData;
+  currentUser!: UserData;
+  user!: UserData;
 
-  user: UserData = {
-    bio: 'ti voglio sofia',
-    darkMode: false,
-    displayName: 'adolf hitler',
-    email: 'example@example.com',
-    everyoneCanText: true,
-    id: 'adolf-the-best',
-    privateProfile: false,
-    profilePicture: '/favicon.ico',
-    username: 'mein kampf best book fr',
-    posts: []
-  }
-
-  constructor(private router: Router, private userService: UserService) {
-    this.user.posts?.push(
-      {
-        body: 'la formula 1 non è il wrestling',
-        comments: [
-          {
-            user: {
-              darkMode: true,
-              displayName: 'cristian horner',
-              email: 'example@example.com',
-              everyoneCanText: false,
-              id: 'efdvsvd',
-              privateProfile: false,
-              profilePicture: '',
-              username: 'best tp fr'
-            },
-            content: 'real'
-          }
-        ],
-        hashtags: ['formula1', 'formula2', 'formula3', 'mclaren', 'ferrari', 'cristianHorny'],
-        id: 'efe',
-        likes: 104,
-        reposts: 69,
-        shares: 10469,
-        user: this.user
-      }
-    );
-
+  constructor(private router: Router, private userService: UserService, private route: ActivatedRoute) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
     } else {
-      token = JSON.parse(token);
-      // @ts-ignore
-      if (Math.floor(Date.now() / 1000) > token.exp)
+      const jwt = JSON.parse(token);
+      if (Math.floor(Date.now() / 1000) > jwt.exp)
         router.navigateByUrl('/login');
+      else {
+        this.route.paramMap.subscribe(params => {
+          if (params.get('id') == jwt.sub)
+            router.navigateByUrl('/profile');
+
+          this.userService.getUserById(params.get('id')!).subscribe(res => this.user = res);
+          this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
+            this.currentUser = res;
+            this.isLoaded = true;
+          });
+        });
+      }
     }
 
   }
-
-  /* constructor(private router: Router) {
-    let token = localStorage.getItem('authToken');
-    if (token === null) {
-      router.navigateByUrl('/login');
-    } else {
-      token = JSON.parse(token);
-      // @ts-ignore
-      if (Date.now() > token.expiryDate)
-        router.navigateByUrl('/login');
-    }
-  } */
 
   showUserOptions(): void {
     this.userBlockOption = !this.userBlockOption;
@@ -88,50 +55,79 @@ export class UserDetailsComponent {
       this.dropdown.nativeElement.style.visibility = 'hidden';
   }
 
-  canUserSeePosts(currentId: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.userService.getUserById(currentId).subscribe({
-        next: result => {
-          if (this.user.following?.find(element => element === result) || !this.user.privateProfile) {
-            resolve(this.user.posts !== undefined);
-          } else {
-            resolve(false);
-          }
-        }
-      });
-    });
+  canUserSeePosts(): boolean {
+    return (this.user.blockedUsers?.find(element => element.id == this.currentUser.id) == null);
   }
 
 
-  userCanText(currentId: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.userService.getUserById(currentId).subscribe({
-        next: result => {
-          if (!this.user.privateProfile && this.user.everyoneCanText)
-            return true;
-          else if (this.user.following?.find(element => element === result))
-            return true;
-          else
-            return false;
-        }
-      });
-    });
+  userCanText(currentId: string): boolean {
+    if (!this.canUserSeePosts()) return false;
+
+    if (this.user.everyoneCanText) return true;
+    else if (this.user.followers?.find(element => element.id == this.currentUser.id) == null) return false;
+    else return true;
   }
 
   follow(): void {
+    if (this.currentUser.following)
+      this.currentUser.following?.push(this.user);
+    else
+      this.currentUser.following = [this.user];
 
+    if (this.user.followers)
+      this.user.followers.push(this.user);
+    else
+      this.user.followers = [this.user];
+
+    this.userService.followUser(this.currentUser.id, this.user.id);
   }
 
   message(): void {
-
+    // TODO must implement chatting service
   }
 
   block(): void {
+    if (confirm("Are you really sure you want to block the currently shown user?"))
+      this.userService.blockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, this.user);
+  }
 
+  setLastClickedPost(post: PostData) {
+    this.lastClickedPost = post;
   }
 
   report(): void {
-
+    this.showReportWindow = true;
+    // TODO must implement some sort of storage to receive reports
   }
 
+  closeReportWindow(event: any): void {
+    this.showReportWindow = false;
+  }
+
+  closeCommentWindow(event: any) {
+    this.showCommentWindow = false;
+  }
+
+  closeShareWindow(event: any) {
+    this.showShareWindow = false;
+  }
+
+  showFollowers(): void {
+    this.showAllFollowers = true;
+  }
+
+  showFollowing(): void {
+    this.showAllFollowing = true;
+  }
+
+  closeFollowersWindow(): void {
+    this.showAllFollowers = false;
+  }
+
+  closeFollowingWindow(): void {
+    this.showAllFollowing = false;
+  }
+
+  protected readonly localStorage = localStorage;
+  protected readonly JSON = JSON;
 }

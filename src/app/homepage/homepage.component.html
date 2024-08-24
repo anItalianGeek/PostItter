@@ -7,7 +7,89 @@
          width="70px"
          height="100px">
   </header>
-  <main>
-    <app-post *ngFor="let post of posts" [post]="post"></app-post>
+  <main *ngIf="!isLoaded">
+    <app-loader></app-loader>
   </main>
+  <main *ngIf="isLoaded">
+    <app-post *ngFor="let post of posts" [post]="post" [currentUser]="currentUser"
+              (commentWindow)="openCommentWindow($event)" (shareWindow)="openShareWindow($event)"
+              (reportWindow)="openReportWindow($event)" (click)="setLastClickedPost(post)"></app-post>
+  </main>
+
+  <div id="add-posts-button" (click)="createPost()">
+    <img src="/icons/add.svg" alt="add" width="20%">
+    <span>Create a Post</span>
+  </div>
+
+  <div id="create-post-overlay" *ngIf="createPostProcedure">
+    <div id="create-post">
+      <h3>What is your new post going to be about... ?</h3>
+      <textarea id="post-content" maxlength="320"></textarea>
+      <h4>Add hashtags <i>(words only separated by whitespaces!)</i></h4>
+      <input type="text">
+      <h4>Choose a color for your post</h4>
+      <div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(173,216,230)" value="rgb(173,216,230)">
+          <label for="rgb(173,216,230)" style="color: rgb(173, 216, 230);">Light Blue</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(144,238,144)" value="rgb(144,238,144)">
+          <label for="rgb(144,238,144)" style="color: rgb(144, 238, 144);">Light Green</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(255,182,193)" value="rgb(255, 182, 193)">
+          <label for="rgb(255,182,193)" style="color: rgb(255, 182, 193);">Light Pink</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(255,255,224)" value="rgb(255,255,224)">
+          <label for="rgb(255,255,224)" style="color: rgb(255, 255, 224);">Light Yellow</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(230,230,250)" value="rgb(230,230,250)">
+          <label for="rgb(230,230,250)" style="color: rgb(230, 230, 250);">Lavender</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(255,228,181)" value="rgb(255,228,181)">
+          <label for="rgb(255,228,181)" style="color: rgb(255, 228, 181);">Light Peach</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(176,224,230)" value="rgb(176,224,230)">
+          <label for="rgb(176,224,230)" style="color: rgb(176, 224, 230);">Skyblue</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(240,128,128)" value="rgb(240,128,128)">
+          <label for="rgb(240,128,128)" style="color: rgb(240, 128, 128);">Light Coral</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(152,255,152)" value="rgb(152,255,152)">
+          <label for="rgb(152,255,152)" style="color: rgb(152, 255, 152);">Light Mint</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(230,168,215)" value="rgb(230,168,215)">
+          <label for="rgb(230,168,215)" style="color: rgb(230, 168, 215);">Light Orchid</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(255,160,122)" value="rgb(255,160,122)">
+          <label for="rgb(255,160,122)" style="color: rgb(255, 160, 122);">Light Salmon</label>
+        </div>
+        <div>
+          <input type="radio" name="color-chooser" id="rgb(224,255,255)" value="rgb(224,255,255)">
+          <label for="rgb(224,255,255)" style="color: rgb(224, 255, 255);">Light Pearl</label>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: row; justify-content: center; margin-top: 15px;">
+        <button id="cancel-creation" (click)="cancelCreation()">Cancel</button>
+        <button id="create" (click)="confirmCreation()">Create Post</button>
+      </div>
+    </div>
+  </div>
+
+  <app-report *ngIf="showReportWindow" (showReportWindowChange)="closeReportWindow($event)" [reportedUser]="lastClickedPost.user"></app-report>
+  <app-comment *ngIf="showCommentWindow" (showCommentWindowChange)="closeCommentWindow($event)" [post]="lastClickedPost"
+               [currentUser]="currentUser"></app-comment>
+  <app-share *ngIf="showShareWindow" (showShareWindowChange)="closeShareWindow($event)" [postToShare]="lastClickedPost"
+             [currentUSer]="currentUser"></app-share>
+
 </div>
+<!-- routerLink="posts/{{post.id}}" -->

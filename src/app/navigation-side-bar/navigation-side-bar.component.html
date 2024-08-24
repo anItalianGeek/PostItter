@@ -37,8 +37,8 @@
     <li>
       <div (click)="navBar.nativeElement.getElementsByTagName('a')[4].click()">
         <a routerLink="/profile">
-          <img src="/icons/flame.svg" width="32" height="32" style="border: 1px solid black; border-radius: 50%">
-          <!-- TODO must change the pic here to be the user's one! not the flame! -->
+          <img src="{{user?.profilePicture || 'blank.jpeg'}}" width="32" height="32"
+               style="border: 1px solid black; border-radius: 50%">
           <div>Profile</div>
         </a>
       </div>

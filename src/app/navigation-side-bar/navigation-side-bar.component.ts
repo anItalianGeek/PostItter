@@ -1,13 +1,26 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {UserData} from "../../UserData";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-navigation-side-bar',
   templateUrl: './navigation-side-bar.component.html',
   styleUrl: './navigation-side-bar.component.css'
 })
-export class NavigationSideBarComponent implements AfterViewInit {
+export class NavigationSideBarComponent implements AfterViewInit, OnInit {
 
   @ViewChild('main', {static: false}) navBar!: ElementRef<HTMLElement>;
+
+  user!: UserData;
+
+  constructor(private userService: UserService) {
+  }
+
+  ngOnInit() {
+    this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
+      this.user = res;
+    });
+  }
 
   ngAfterViewInit() {
     this.navBar.nativeElement.style.height = window.innerHeight + 'px';

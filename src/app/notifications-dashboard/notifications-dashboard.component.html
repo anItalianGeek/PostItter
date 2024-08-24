@@ -6,14 +6,17 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
-  <main>
+  <main *ngIf="!isLoaded">
+    <app-loader></app-loader>
+  </main>
+  <main *ngIf="isLoaded">
     <div id="button-container">
       <div class="button" (click)="clearNotifications()">Clear Notifications</div>
     </div>
     <div id="notifs-container">
       <div>
-        <app-notification *ngFor="let notification of myself.notifications"
-                          [notification]="notification"></app-notification>
+        <app-notification *ngFor="let notification of myNotifs" [notification]="notification"
+                          (click)="clearSingleNotification(notification.id)"></app-notification>
       </div>
     </div>
   </main>

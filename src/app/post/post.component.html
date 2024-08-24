@@ -1,4 +1,4 @@
-<div id="post">
+<div id="post" #postref>
   <div id="user">
     <div id="pfp" routerLink="/users/{{post.user.id}}"><img src="{{post.user.profilePicture}}"></div>
     <p id="name" routerLink="/posts/{{post.id}}"><span style="font-weight: bold">
@@ -7,19 +7,27 @@
     <img src="/icons/menu-dots-vertical.svg" alt="user-options" width="4%" (click)="triggerUserOptions()"
          class="options">
     <div class="dropdown" *ngIf="userOptionsDropdownShown">
-      <div class="dropdown-option">
-        <img src="/icons/exclamation.svg" alt="exclamation" width="20%">
-        <div>Report Post</div>
+      <div *ngIf="!ownedByActiveUser">
+        <div class="dropdown-option" (click)="reportPost()">
+          <img src="/icons/exclamation.svg" alt="exclamation" width="20%">
+          <div>Report Post</div>
+        </div>
+        <div class="dropdown-option" (click)="reportUser()">
+          <img src="/icons/cross-circle.svg" alt="cross" width="20%">
+          <div>Report User</div>
+        </div>
       </div>
-      <div class="dropdown-option">
-        <img src="/icons/cross-circle.svg" alt="cross" width="20%">
-        <div>Report User</div>
+      <div *ngIf="ownedByActiveUser">
+        <div class="dropdown-option" (click)="deletePost()">
+          <img src="/icons/trash.png" alt="trash" width="20%">
+          <div>Delete Post</div>
+        </div>
       </div>
     </div>
   </div>
-  <div id="post-content" routerLink="/posts/{{post.id}}">
-    <p>{{ post.body }}</p><br>
-    <p>
+  <div id="post-content" routerLink="/posts/{{post.id}}" #postcontent1>
+    <p #postcontent2>{{ post.body }}</p><br>
+    <p #postcontent3>
       <span *ngFor="let hash of post.hashtags" style="color: lightblue">#{{ hash }} </span>
     </p>
   </div>
@@ -31,16 +39,18 @@
       </li>
       <li>
         <span class="icon"><img src="/icons/comment-alt-middle.svg" alt="comment" width="25%" align="center"
-                                (click)="comment($event)"></span>
+                                (click)="comment()"></span>
         <span *ngIf="post.comments">{{ post.comments?.length }}</span><span *ngIf="!post.comments">0</span>
       </li>
       <li>
         <span class="icon"><img src="/icons/code-compare.svg" alt="share" width="25%"
-                                align="center" (click)="repost($event)"></span>{{ post.reposts }}
+                                align="center" (click)="repost()"></span>{{ post.reposts }}
       </li>
       <li>
-        <span class="icon"><img src="/icons/paper-plane.svg" alt="" width="25%" align="center" (click)="share($event)"></span>{{ post.shares }}
+        <span class="icon"><img src="/icons/paper-plane.svg" alt="" width="25%" align="center"
+                                (click)="share()"></span>{{ post.shares }}
       </li>
     </ul>
   </div>
+
 </div>

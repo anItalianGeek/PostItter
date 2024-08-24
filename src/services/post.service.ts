@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, switchMap} from "rxjs";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {PostData} from "../PostData";
 import {UserService} from "./user.service";
 import {UserData} from "../UserData";
@@ -10,58 +10,36 @@ import {UserData} from "../UserData";
 })
 export class PostService {
 
-  private url: string = "http://192.168.31.200";
+  private url: string = "http://localhost:5265";
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
 
   // GET existing data
-  getPostById(id: string): Observable<PostData> {
-    return this.http.get<PostData>(this.url + '/api/posts/' + id);
+  getPosts(): Observable<PostData[]> {
+    let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    return this.http.get<PostData[]>(this.url + '/api/posts', {params: params});
   }
 
-  getPostsOfUser(userId: string): Observable<PostData[] | undefined> {
-    return this.userService.getUserById(userId).pipe(
-      switchMap(user => {
-        return of(user.posts);
-      })
-    );
+  getPostById(id: string): Observable<PostData> {
+    let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    return this.http.get<PostData>(this.url + '/api/posts/' + id, {params: params});
+  }
+
+  getPostsOfUser(userId: string): Observable<PostData[]> {
+    let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    return this.http.get<PostData[]>(this.url + '/api/posts/user/' + userId, {params: params});
   }
 
   getPostsOfUserByFilter(userId: string, filter: string): Observable<PostData[]> {
-    return this.userService.getUserById(userId).pipe(
-      switchMap(user => {
-        if (!user.posts)
-          return of([]);
-
-        switch (filter) {
-          case 'likes':
-            if (user.likedPosts)
-              return of(user.likedPosts);
-            else
-              return of([]);
-          case 'comments':
-            if (user.commentedPosts)
-              return of(user.commentedPosts);
-            else
-              return of([]);
-          case 'reposts':
-            const posts: PostData[] = [];
-            for (const post of user.posts) {
-              if (typeof post.body !== 'string')
-                posts.push(post);
-            }
-            return of(posts);
-        }
-
-        return of([]);
-      })
-    )
+    let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    return this.http.get<PostData[]>(this.url + '/api/posts/user' + userId + '/' + filter, {params: params});
   }
 
   // POST new posts on the server
   addNewPost(post: PostData): void {
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
     this.http.post<PostData>(this.url + '/api/posts/' + post.id, post, {headers: headers}).subscribe({ // TODO must delete this shit once debugs are finished
       next: (response) => {
         console.log('File added successfully');
@@ -94,14 +72,22 @@ export class PostService {
         post.shares++;
     }
 
-    this.http.put<PostData>(this.url + '/api/posts/' + post.id, post).subscribe({
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    const params = new HttpParams().set('action', action);
+    this.http.put<PostData>(this.url + '/api/posts/update/' + post.id, comment, {
+      headers: headers,
+      params: params
+    }).subscribe({
       next: value => console.log('file updated successfully!', value)
     });
   }
 
   // DELETE the post from the server
   deletePost(post: PostData): void {
-    this.http.delete(this.url + '/api/posts/' + post.id).subscribe({
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    this.http.delete(this.url + '/api/posts/' + post.id, {headers}).subscribe({
       next: (response) => {
         console.log('File deleted successfully');
       },

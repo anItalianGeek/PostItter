@@ -13,7 +13,7 @@ import {UserDetailsComponent} from "./user-details/user-details.component";
 import {ProfileComponent} from "./profile/profile.component";
 
 const routes: Routes = [
-  {path: '', component: HomepageComponent},
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
   {path: 'home', component: HomepageComponent},
   {path: 'posts/:id', component: PostDetailComponent},

@@ -1,0 +1,13 @@
+<div id="share-overlay">
+  <div id="share-modal">
+    <app-post [post]="postToShare"></app-post>
+    <div>
+      <img src="/icons/cross.svg" alt="" width="20%" style="border-radius: 50%; float: right"
+           (click)="closeShareMenu()">
+    </div>
+    <h3>Share Post With...</h3>
+    <div id="users">
+      <app-user *ngFor="let user of possibleUsers" [user]="user" (click)="share(user)"></app-user>
+    </div>
+  </div>
+</div>

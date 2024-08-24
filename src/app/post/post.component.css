@@ -57,13 +57,8 @@ li:hover .action-button {
 #post-content {
   border: 1px hidden;
   border-radius: 20px;
-  background-color: #fafafa;
   margin: 10px;
   padding: 10px;
-}
-
-#post-content * {
-  background-color: inherit;
 }
 
 #user {

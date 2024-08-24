@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, switchMap} from "rxjs";
+import {Observable} from "rxjs";
 import {NotificationData} from "../NotificationData";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
@@ -10,19 +10,14 @@ import {UserData} from "../UserData";
 })
 export class NotificationsService {
 
-  private url: string = "http://192.168.31.200";
+  private url: string = "http://localhost:5265";
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
 
   // GET the existing notifications
-  getNotificationsFromUser(id: string): Observable<NotificationData[] | undefined> {
-    return this.userService.getUserById(id).pipe(
-      switchMap(user => {
-        if (user.notifications) return of(user.notifications);
-        else return of([]);
-      })
-    )
+  getNotificationsFromUser(id: string): Observable<NotificationData[]> {
+    return this.http.get<NotificationData[]>(this.url + '/api/notifications/get/' + id);
   }
 
   // PUT a new notification
@@ -33,15 +28,12 @@ export class NotificationsService {
   }
 
   // DELETE all notifications or specific one
-  deleteAllNotifications(user: UserData): void {
-    user.notifications = undefined;
-    this.userService.updateUser(user);
+  deleteAllNotifications(id: string): void {
+    this.http.delete(this.url + '/api/notifications/deleteAll/' + id);
   }
 
-  deleteSingleNotification(user: UserData, notification: NotificationData): void {
-    if (!user.notifications) return;
-    user.notifications = user.notifications.filter(notification_ => !this.notificationsAreEqual(notification_, notification));
-    this.userService.updateUser(user);
+  deleteSingleNotification(id: string): void {
+    this.http.delete(this.url + '/api/notifications/delete/' + id);
   }
 
   private notificationsAreEqual(n1: NotificationData, n2: NotificationData): boolean {

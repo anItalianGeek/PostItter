@@ -1,48 +1,19 @@
-import {Component} from '@angular/core';
-import {NotificationData} from "../../NotificationData";
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {NotificationData} from "../../NotificationData";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-notifications-dashboard',
   templateUrl: './notifications-dashboard.component.html',
   styleUrl: './notifications-dashboard.component.css'
 })
-export class NotificationsDashboardComponent {
+export class NotificationsDashboardComponent implements OnInit {
 
-  // myself variable from localstorage
-  myself: { notifications: NotificationData[] } = {
-    notifications: [
-      {
-        type: 'new-follow',
-        user: {
-          darkMode: true,
-          displayName: 'cristian horner',
-          email: 'example@example.com',
-          everyoneCanText: false,
-          id: 'efdvsvd',
-          privateProfile: false,
-          profilePicture: '',
-          username: 'best tp fr'
-        }
-      },
-      {
-        type: 'new-like',
-        user: {
-          darkMode: true,
-          displayName: 'cristian horner',
-          email: 'example@example.com',
-          everyoneCanText: false,
-          id: 'efdvsvd',
-          privateProfile: false,
-          profilePicture: '',
-          username: 'best tp fr'
-        },
-        postId: 'dummy'
-      }
-    ]
-  };
+  isLoaded: boolean = false;
+  myNotifs: NotificationData[] = [];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private notificationService: NotificationsService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -54,9 +25,25 @@ export class NotificationsDashboardComponent {
     }
   }
 
+  ngOnInit() {
+    this.notificationService.getNotificationsFromUser((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
+      this.myNotifs = res;
+      this.isLoaded = true;
+    });
+  }
+
   clearNotifications() {
-    if (confirm('Are you really sure you want to delete all notifications?'))
-      this.myself.notifications = [];
+    if (confirm('Are you really sure you want to delete all notifications?')) {
+      this.notificationService.deleteAllNotifications((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+      this.myNotifs = [];
+    }
+  }
+
+  clearSingleNotification(id: string): void {
+    if (confirm('Are you sure you want to delete the selected notification?')) {
+      this.notificationService.deleteSingleNotification(id);
+      this.myNotifs = this.myNotifs.filter(elem => elem.id != id);
+    }
   }
 
 }

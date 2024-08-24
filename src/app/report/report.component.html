@@ -1,0 +1,19 @@
+<div id="overlay">
+  <div id="modal">
+    <h2>Why are you reporting this user?</h2>
+    <select id="report-reason" [(ngModel)]="selectedOption" #reason>
+      <option value="" selected>Select a reason</option>
+      <option value="spam">Spam</option>
+      <option value="abuse">Abuse</option>
+      <option value="harassment">Harassment</option>
+      <option value="other">Other</option>
+    </select>
+    <h4>Please explain further</h4>
+    <textarea id="report-details" rows="5" placeholder="Provide more details about the report..."
+              #explanation></textarea>
+    <div>
+      <button (click)="cancelReport()">Cancel Report</button>
+      <button (click)="submitReport()">Submit report</button>
+    </div>
+  </div>
+</div>

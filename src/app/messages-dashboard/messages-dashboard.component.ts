@@ -8,6 +8,8 @@ import {Router} from "@angular/router";
 })
 export class MessagesDashboardComponent {
 
+  isLoaded: boolean = false;
+
   constructor(private router: Router) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {

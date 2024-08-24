@@ -28,8 +28,8 @@ export class NotificationComponent implements OnInit {
       case 'new-comment':
         this.notification.message = "commented on one of your posts.";
         break;
-      case 'new-comment-reply':
-        this.notification.message = "replied on a comment of yours.";
+      case 'tag':
+        this.notification.message = "tagged you.";
         break;
     }
   }
@@ -48,9 +48,9 @@ export class NotificationComponent implements OnInit {
       case 'new-comment':
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         break;
-      case 'new-comment-reply':
+      case 'tag':
         this.router.navigateByUrl('/posts/' + this.notification.postId);
-        // navigate to comment
+        // navigate to entity
         break;
     }
   }

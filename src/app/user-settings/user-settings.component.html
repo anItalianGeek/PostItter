@@ -6,10 +6,15 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
-  <main>
+  <main *ngIf="!isLoaded">
+    <app-loader></app-loader>
+  </main>
+  <main *ngIf="isLoaded">
     <div id="user-info">
-      <div id="pfp" class="inline-blk"><img src="{{user.profilePicture}}" alt="user-pfp"
-                                            style="border-radius: 50%" width="128px" height="128px"></div>
+      <div id="pfp" class="inline-blk" (click)="pfp_selector.click()"><img src="{{user.profilePicture}}" alt="user-pfp"
+                                                                           style="border-radius: 50%" width="128px"
+                                                                           height="128px"></div>
+      <input type="file" name="pfp-selector" id="pfp-selector" style="display: none" #pfp_selector>
       <div id="names" class="inline-blk">
         <div id="username"><small>Username:</small> {{ user.username }}</div>
         <div id="display-name"><small>Display Name:</small> {{ user.displayName }}</div>
@@ -20,18 +25,23 @@
       <h2>Essentials</h2>
       <div id="change-username">
         <span class="inline-blk">Change Username</span>
-        <input type="text" placeholder="{{user.username}}">
-        <div class="button" (click)="changeUsername()">Change Username</div>
+        <input type="text" placeholder="{{user.username}}" #changeUsername>
       </div>
       <div id="change-display-name">
         <span class="inline-blk">Change Display Name</span>
-        <input type="text" placeholder="{{user.displayName}}">
-        <div class="button" (click)="changeDisplayName()">Change Display Name</div>
+        <input type="text" placeholder="{{user.displayName}}" #changeDisplayName>
       </div>
       <div id="change-bio">
         <span class="inline-blk">Change Bio</span>
-        <input type="text" placeholder="{{user.bio}}">
-        <div class="button" (click)="changeBio()">Change Bio</div>
+        <input type="text" placeholder="{{user.bio}}" #changeBio>
+      </div>
+      <div id="passowrd-change">
+        <span class="inline-blk">Change Password</span>
+        <input type="text" placeholder="Input current password" style="width: 150px" #oldPasswordInput>
+        <input type="text" *ngIf="oldPasswordInput.value != ''" style="width: 150px" placeholder="Input new Password"
+               #newPasswordInput>
+        <input type="text" *ngIf="oldPasswordInput.value != ''" style="width: 150px" placeholder="Confirm new Password"
+               #confirmPasswordInput>
       </div>
     </div>
     <div id="appearence">
@@ -40,8 +50,7 @@
         <span class="inline-blk">Dark Mode</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch0" type="checkbox" class="switch"
-                   (click)="toggleDarkMode($event)" #everyoneCanText>
+            <input value="private" name="switch" id="switch0" type="checkbox" class="switch" #darkMode>
             <label for="switch0">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -60,7 +69,7 @@
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
             <input value="private" name="switch" id="switch" type="checkbox" class="switch"
-                   (click)="togglePrivateProfile($event)" #privateProfile>
+                   (click)="togglePrivateProfile()" #privateProfile>
             <label for="switch">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -76,7 +85,7 @@
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
             <input value="private" name="switch" id="switch1" type="checkbox" class="switch"
-                   (click)="toggleTextsFromAll($event)" #everyoneCanText>
+                   (click)="toggleTextsFromAll()" [checked]="user.everyoneCanText" #everyoneCanText>
             <label for="switch1">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -91,6 +100,122 @@
           will be able to text
           you.
         </div>
+      </div>
+      <div id="enable-2fa">
+        <span class="inline-blk">Enable 2 Factor Authentication</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch2" type="checkbox" class="switch" #twoFA>
+            <label for="switch2">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="notifications">
+      <h2>Notification Preferences</h2>
+      <div id="like-notifs">
+        <span class="inline-blk">Notify when like received</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch3" type="checkbox" class="switch" #likeNotif>
+            <label for="switch3">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="comment-notifs">
+        <span class="inline-blk">Notify when comments received</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch4" type="checkbox" class="switch" #commentNotif>
+            <label for="switch4">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="comment-reply-notifs">
+        <span class="inline-blk">Notify for replies or posts where you are tagged</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch5" type="checkbox" class="switch" #replyNotif>
+            <label for="switch5">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="follow-notifs">
+        <span class="inline-blk">Notify when getting a new follower</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch7" type="checkbox" class="switch" #followNotif>
+            <label for="switch7">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="message-notifs">
+        <span class="inline-blk">Notify when getting a new message</span>
+        <div class="inline-blk">
+          <div class="checkbox-wrapper-35">
+            <input value="private" name="switch" id="switch8" type="checkbox" class="switch" #messageNotif>
+            <label for="switch8">
+              <span class="switch-x-text">This is </span>
+              <span class="switch-x-toggletext">
+                <span class="switch-x-unchecked"><span class="switch-x-hiddenlabel">Unchecked: </span>Off</span>
+                <span class="switch-x-checked"><span class="switch-x-hiddenlabel">Checked: </span>On</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="account-actions">
+      <h2>Account Actions</h2>
+      <button id="log-out" (click)="logOut()">Log Out</button>
+      <button class="delete-account" (click)="deleteAccount()">Delete Account</button>
+    </div>
+
+    <div id="delete-account-prompt-overlay" *ngIf="accountDeletionProcess">
+      <div id="modal">
+        <h2>Are you really sure you want to delete your account?</h2>
+        <h4>If so, please write down in the input field the following text: {{ deletionMessage }}</h4>
+        <input type="text" #deletionMessageInput>
+        <button (click)="confirmDeletion(true)">I changed my mind</button>
+        <button class="delete-account" (click)="confirmDeletion(false)">Delete Account</button>
+      </div>
+    </div>
+
+    <div id="save-changes-overlay" *ngIf="changesWereMade">
+      <div id="save-changes">
+        <span style="display: inline-block;"><b>You have unsaved changes!</b></span>
+        <button id="revert" (click)="revertChanges()">Revert Settings</button>
+        <button id="save" (click)="saveChanges()">Save Changes</button>
       </div>
     </div>
   </main>

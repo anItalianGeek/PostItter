@@ -18,7 +18,13 @@ import {UserDetailsComponent} from './user-details/user-details.component';
 import {LoginComponent} from './login/login.component';
 import {PostDetailComponent} from './post-detail/post-detail.component';
 import {NotificationComponent} from './notification/notification.component';
-import { ProfileComponent } from './profile/profile.component';
+import {ProfileComponent} from './profile/profile.component';
+import {HttpClientModule} from "@angular/common/http";
+import {LoaderComponent} from './loader/loader.component';
+import {CommentComponent} from './comment/comment.component';
+import {ReportComponent} from './report/report.component';
+import {FormsModule} from "@angular/forms";
+import { ShareComponent } from './share/share.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +43,18 @@ import { ProfileComponent } from './profile/profile.component';
     LoginComponent,
     PostDetailComponent,
     NotificationComponent,
-    ProfileComponent
+    ProfileComponent,
+    LoaderComponent,
+    CommentComponent,
+    ReportComponent,
+    ShareComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,11 @@
+<div id="create-comment-overlay">
+  <div id="create-comment">
+    <app-post [post]="post"></app-post>
+    <h3>What is your comment going to be about... ?</h3>
+    <textarea #content></textarea>
+    <div style="display: flex; flex-direction: row; justify-content: center; margin-top: 15px;">
+      <button id="cancel-creation" (click)="cancelComment()">Cancel</button>
+      <button id="create" (click)="sendComment()">Create Post</button>
+    </div>
+  </div>
+</div>

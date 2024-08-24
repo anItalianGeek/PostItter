@@ -11,6 +11,14 @@ import {Router} from "@angular/router";
 })
 export class SearchPageComponent implements OnInit, AfterViewInit {
 
+  activatedFilter: number = 3;
+  @ViewChild('filters', {static: false}) searchFilters!: ElementRef<HTMLElement>;
+  @ViewChild('searchBar', {static: false}) searchBar!: ElementRef<HTMLInputElement>;
+  responseData: (PostData | UserData)[] = [];
+  searchKeywords: Subject<string> = new Subject<string>();
+  posts: PostData[] = [];
+  users: UserData[] = [];
+
   constructor(private router: Router) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
@@ -22,14 +30,6 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
         router.navigateByUrl('/login');
     }
   }
-
-  activatedFilter: number = 3;
-  @ViewChild('filters', {static: false}) searchFilters!: ElementRef<HTMLElement>;
-  @ViewChild('searchBar', {static: false}) searchBar!: ElementRef<HTMLInputElement>;
-  responseData: (PostData | UserData)[] = [];
-  searchKeywords: Subject<string> = new Subject<string>();
-  posts: PostData[] = [];
-  users: UserData[] = [];
 
   ngOnInit() {
     this.searchKeywords.pipe(

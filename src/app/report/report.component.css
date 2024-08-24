@@ -1,0 +1,61 @@
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#modal {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  text-align: center;
+  border-radius: 8px;
+  width: 300px;
+}
+
+#modal h2 {
+  margin: 0 0 20px 0;
+}
+
+#report-reason {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#modal h4 {
+  margin: 20px 0 10px 0;
+  font-size: 16px;
+}
+
+#report-details {
+  width: 275px;
+  height: 125px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: none;
+}
+
+button {
+  width: 150px;
+  height: 50px;
+  font-size: large;
+  margin: 10px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 25px;
+  transition: 0.3s;
+}
