@@ -6,11 +6,11 @@
     <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
          height="100px">
   </header>
-  <main *ngIf="!post">
+  <main *ngIf="!isLoaded">
     <app-loader></app-loader>
   </main>
-  <main *ngIf="post">
-    <div id="flex-container">
+  <main *ngIf="postDataObservable | async as post">
+    <div id="flex-container" (load)="isLoaded = true">
       <div id="post" #postref>
         <div id="user">
           <div id="pfp" routerLink="/users/{{post?.user?.id}}"><img
@@ -22,17 +22,17 @@
                class="options">
           <div class="dropdown" *ngIf="userOptionsDropdownShown">
             <div *ngIf="!ownedByActiveUser">
-              <div class="dropdown-option">
+              <div class="dropdown-option" (click)="reportPost()">
                 <img src="/icons/exclamation.svg" alt="exclamation" width="20%">
                 <div>Report Post</div>
               </div>
-              <div class="dropdown-option">
+              <div class="dropdown-option" (click)="reportDetail()">
                 <img src="/icons/cross-circle.svg" alt="cross" width="20%">
                 <div>Report User</div>
               </div>
             </div>
             <div *ngIf="ownedByActiveUser">
-              <div class="dropdown-option">
+              <div class="dropdown-option" (click)="deletePostDetail()">
                 <img src="/icons/trash.png" alt="trash" width="20%">
                 <div>Delete Post</div>
               </div>
@@ -67,7 +67,6 @@
           </ul>
         </div>
       </div>
-      <!-- insert comment component here -->
       <div class="comment" *ngFor="let comment of post?.comments">
         <div id="comment-info">
           <img src="{{comment?.user?.profilePicture}}" alt="" width="40px" height="40px" class="inline-blk"
@@ -80,6 +79,15 @@
         <div class="post-content">{{ comment?.content }}</div>
       </div>
     </div>
+
+    <app-report *ngIf="showReportPanel" (showReportWindowChange)="stopReportingDetail($event)"
+                [reportedUser]="post.user"></app-report>
+    <app-comment *ngIf="showCommentPanel" (showCommentWindowChange)="stopCommentingDetail($event)"
+                 [post]="currentPost"
+                 [currentUser]="currentUser"></app-comment>
+    <app-share *ngIf="showSharePanel" (showShareWindowChange)="stopSharingDetail($event)"
+               [postToShare]="currentPost"
+               [currentUSer]="currentUser"></app-share>
 
   </main>
 </div>

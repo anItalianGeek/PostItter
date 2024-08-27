@@ -1,6 +1,8 @@
 <div id="create-comment-overlay">
   <div id="create-comment">
-    <app-post [post]="post"></app-post>
+    <div *ngIf="post | async">
+      <app-post [post]="post"></app-post>
+    </div>
     <h3>What is your comment going to be about... ?</h3>
     <textarea #content></textarea>
     <div style="display: flex; flex-direction: row; justify-content: center; margin-top: 15px;">

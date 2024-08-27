@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NotificationData} from "../../NotificationData";
 import {Router} from "@angular/router";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-notification',
@@ -11,7 +12,7 @@ export class NotificationComponent implements OnInit {
 
   @Input() notification!: NotificationData;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -21,6 +22,9 @@ export class NotificationComponent implements OnInit {
         break;
       case 'new-follow':
         this.notification.message = "started following you.";
+        break;
+      case 'request-follow':
+        this.notification.message = "requested to follow you.";
         break;
       case 'new-like':
         this.notification.message = "liked your post.";
@@ -40,6 +44,7 @@ export class NotificationComponent implements OnInit {
         // open chat, not implemented yet
         break;
       case 'new-follow':
+      case 'request-follow':
         this.router.navigateByUrl('/users/' + this.notification.user.id);
         break;
       case 'new-like':
@@ -47,12 +52,17 @@ export class NotificationComponent implements OnInit {
         break;
       case 'new-comment':
         this.router.navigateByUrl('/posts/' + this.notification.postId);
+        // navigate to entity
         break;
       case 'tag':
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         // navigate to entity
         break;
     }
+  }
+
+  acceptRequest(): void {
+    this.userService.followUser(this.notification.user.id, (JSON.parse(localStorage.getItem('auth-token')!)).sub);
   }
 
 }

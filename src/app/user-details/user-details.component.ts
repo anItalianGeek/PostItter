@@ -1,15 +1,17 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserData} from "../../UserData";
 import {PostData} from "../../PostData";
+import {NotificationsService} from "../../services/notifications.service";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.css'
 })
-export class UserDetailsComponent {
+export class UserDetailsComponent implements OnInit {
 
   isLoaded: boolean = false;
   @ViewChild('dropdown', {static: false}) dropdown!: ElementRef<HTMLElement>;
@@ -20,31 +22,34 @@ export class UserDetailsComponent {
   showAllFollowers: boolean = false;
   showAllFollowing: boolean = false;
   lastClickedPost!: PostData;
+  currentUserObservable!: Observable<UserData>;
   currentUser!: UserData;
-  user!: UserData;
+  userObservable!: Observable<UserData>;
+  userFollowers!: Observable<UserData[]>;
+  userFollowing!: Observable<UserData[]>;
 
-  constructor(private router: Router, private userService: UserService, private route: ActivatedRoute) {
+  constructor(private router: Router, private userService: UserService, private notificationService: NotificationsService, private route: ActivatedRoute) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
-      router.navigateByUrl('/login');
+      this.router.navigateByUrl('/login');
     } else {
       const jwt = JSON.parse(token);
       if (Math.floor(Date.now() / 1000) > jwt.exp)
-        router.navigateByUrl('/login');
-      else {
+        this.router.navigateByUrl('/login');
+      else
         this.route.paramMap.subscribe(params => {
           if (params.get('id') == jwt.sub)
             router.navigateByUrl('/profile');
 
-          this.userService.getUserById(params.get('id')!).subscribe(res => this.user = res);
-          this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
-            this.currentUser = res;
-            this.isLoaded = true;
-          });
+          this.userObservable = this.userService.getUserById(params.get('id')!);
+          this.currentUserObservable = this.userService.getUserById(jwt.sub);
         });
-      }
     }
+  }
 
+  ngOnInit() {
+    this.currentUserObservable.subscribe(user => this.currentUser = user);
+    this.isLoaded = true; // useless?
   }
 
   showUserOptions(): void {
@@ -55,31 +60,40 @@ export class UserDetailsComponent {
       this.dropdown.nativeElement.style.visibility = 'hidden';
   }
 
-  canUserSeePosts(): boolean {
-    return (this.user.blockedUsers?.find(element => element.id == this.currentUser.id) == null);
-  }
-
-
-  userCanText(currentId: string): boolean {
-    if (!this.canUserSeePosts()) return false;
-
-    if (this.user.everyoneCanText) return true;
-    else if (this.user.followers?.find(element => element.id == this.currentUser.id) == null) return false;
-    else return true;
-  }
-
   follow(): void {
-    if (this.currentUser.following)
-      this.currentUser.following?.push(this.user);
-    else
-      this.currentUser.following = [this.user];
+    this.userObservable.subscribe(user => {
+      if (!user.privateProfile) {
+        if (this.currentUser.following)
+          this.currentUser.following?.push(user);
+        else
+          this.currentUser.following = [user];
 
-    if (this.user.followers)
-      this.user.followers.push(this.user);
-    else
-      this.user.followers = [this.user];
 
-    this.userService.followUser(this.currentUser.id, this.user.id);
+        this.userService.followUser(this.currentUser.id, user.id);
+        this.notificationService.addNewNotification({
+          id: "",
+          type: "new-follow",
+          user: this.currentUser
+        }, user);
+      } else {
+        this.notificationService.addNewNotification({
+          id: "",
+          type: "request-follow",
+          user: this.currentUser
+        }, user);
+        alert("Follow request has been sent!");
+      }
+    });
+  }
+
+  unfollow(): void {
+    this.userObservable.subscribe(user => {
+
+    });
+  }
+
+  isUserFollowed(user: UserData): boolean {
+    return this.currentUser.following?.find(e => e.id === user.id) != null;
   }
 
   message(): void {
@@ -88,7 +102,12 @@ export class UserDetailsComponent {
 
   block(): void {
     if (confirm("Are you really sure you want to block the currently shown user?"))
-      this.userService.blockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, this.user);
+      this.userObservable.subscribe(user => {
+        this.userService.blockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, user);
+        this.currentUser.blockedUsers?.push(user);
+        this.currentUser.following?.filter(e => e.id !== user.id);
+        this.userService.unfollowUser(this.currentUser.id, user.id);
+      });
   }
 
   setLastClickedPost(post: PostData) {
@@ -113,10 +132,22 @@ export class UserDetailsComponent {
   }
 
   showFollowers(): void {
+    this.userObservable.subscribe(user => {
+      this.userService.getFollowers(user.id).subscribe(response => {
+        user.followers = response;
+        this.userFollowers = of(response!)
+      })
+    });
     this.showAllFollowers = true;
   }
 
   showFollowing(): void {
+    this.userObservable.subscribe(user => {
+      this.userService.getFollowing(user.id).subscribe(response => {
+        user.following = response;
+        this.userFollowing = of(response!)
+      })
+    });
     this.showAllFollowing = true;
   }
 

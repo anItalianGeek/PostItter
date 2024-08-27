@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 
@@ -34,9 +34,13 @@ export class LoginService {
 
   // GET information about a desired username, whether it is available or not
   checkUsenameAvailability(username: string): Observable<boolean> {
-    return this.http.get<boolean>(this.url + 'api/authguard/check/' + username);
+    let params = new HttpParams().set('name', username);
+    return this.http.get<boolean>(this.url + 'api/authguard/check', {params: params});
   }
 
+  requestPasswordRecovery(recoveryEmail: string) {
+    this.http.post(this.url + 'api/PasswordRecovery/requestChange', recoveryEmail);
+  }
 }
 
 export interface LoginUserInput {

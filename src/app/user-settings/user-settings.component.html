@@ -9,7 +9,7 @@
   <main *ngIf="!isLoaded">
     <app-loader></app-loader>
   </main>
-  <main *ngIf="isLoaded">
+  <main *ngIf="userDataObservable | async as user">
     <div id="user-info">
       <div id="pfp" class="inline-blk" (click)="pfp_selector.click()"><img src="{{user.profilePicture}}" alt="user-pfp"
                                                                            style="border-radius: 50%" width="128px"
@@ -116,6 +116,10 @@
           </div>
         </div>
       </div>
+      <div id="unblockUsers">
+        <span class="inline blk">Click the button to see blocked users (and click on them to unblock)</span>
+        <button (click)="showBlockedUsers = true" style="width: 200px; height: 35px">List Blocked Users</button>
+      </div>
     </div>
     <div id="notifications">
       <h2>Notification Preferences</h2>
@@ -199,6 +203,24 @@
       <h2>Account Actions</h2>
       <button id="log-out" (click)="logOut()">Log Out</button>
       <button class="delete-account" (click)="deleteAccount()">Delete Account</button>
+    </div>
+
+    <div *ngIf="showBlockedUsers" id="blocked-users-overlay">
+      <div id="blocked-users-modal">
+        <div id="close-image" style="display: flex; justify-content: flex-end; align-items: center"> <!-- TODO must align this fucking image -->
+          <div>
+            <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%; float: right"
+                 (click)="showBlockedUsers = false">
+          </div>
+        </div>
+        <div *ngIf="userDataObservable | async as user"
+             style="display: flex; justify-content: center; align-items: center; flex-direction: column">
+          <div *ngIf="!user.blockedUsers || user.blockedUsers?.length == 0"><small><i>No Blocked Users.</i></small>
+          </div>
+          <app-user *ngFor="let blockedUser of user.blockedUsers" [user]="blockedUser"
+                    (click)="unblockUser(user)"></app-user>
+        </div>
+      </div>
     </div>
 
     <div id="delete-account-prompt-overlay" *ngIf="accountDeletionProcess">

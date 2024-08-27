@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {debounceTime, distinctUntilChanged, Observable, Subject, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject, switchMap} from "rxjs";
 import {Router} from "@angular/router";
 import {LoginService, LoginUserInput} from "../../services/login.service";
 
@@ -19,23 +19,28 @@ export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('username', {static: false}) username!: ElementRef<HTMLInputElement>;
   @ViewChild('displayname', {static: false}) displayname!: ElementRef<HTMLInputElement>;
   loginPage: boolean = true;
+  showPasswordRecoveryForm: boolean = false;
   usernameInputs: Subject<string> = new Subject<string>();
-  usernameAvaiable = false;
+  usernameAvailable = false;
 
   constructor(private loginService: LoginService, private router: Router) {
     this.usernameInputs.pipe(
-      debounceTime(250),
+      debounceTime(400),
       distinctUntilChanged(),
-      switchMap(username => this.checkAvailability(username))
-    ).subscribe();
-  }
-
-  checkAvailability(username: string): Observable<boolean> {
-    return this.loginService.checkUsenameAvailability(username); // TODO method not implemented yet
+      switchMap(username => this.loginService.checkUsenameAvailability(username))
+    ).subscribe(response => this.usernameAvailable = response);
   }
 
   ngOnInit() {
-    this.isLoaded = true; // is this worthless?
+    this.isLoaded = true;
+    setInterval(() => {
+      if (!this.loginPage) {
+        if (this.usernameAvailable)
+          this.username.nativeElement.style.borderColor = '';
+        else
+          this.username.nativeElement.style.borderColor = 'red';
+      }
+    }, 500);
   }
 
   ngAfterViewInit(): void {
@@ -74,8 +79,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       displayName: this.displayname.nativeElement.value,
     };
 
-    if (this.usernameAvaiable) {
-      console.log('about to call api');
+    if (this.usernameAvailable) {
       this.loginService.signUp(payload)
         .subscribe({
           next: (value) => {
@@ -89,6 +93,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
     } else {
       alert("Your proposed username is unavailable!");
     }
+  }
+
+  requestPasswordRecovery(recoveryEmail: string) {
+    this.showPasswordRecoveryForm = false;
+    this.loginService.requestPasswordRecovery(recoveryEmail);
   }
 
 }

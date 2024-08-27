@@ -88,7 +88,7 @@ button {
   }
 }
 
-#delete-account-prompt-overlay {
+#delete-account-prompt-overlay, #blocked-users-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -101,7 +101,7 @@ button {
   z-index: 1000;
 }
 
-#modal {
+#modal, #blocked-users-modal {
   background: white;
   padding: 20px;
   border-radius: 8px;

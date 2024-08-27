@@ -4,4 +4,8 @@
     {{ notification.user.username }}
   </p>
   <p>{{ notification.message }}</p>
+  <div *ngIf="notification.type == 'request-follow'">
+    <button style="background-color: lightcoral">Reject</button>
+    <button style="background-color: lightgreen; z-index: 500;" (click)="acceptRequest()">Accept</button>
+  </div>
 </div>

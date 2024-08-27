@@ -7,7 +7,7 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="isLoaded">
-    <form class="form" method="POST" *ngIf="loginPage">
+    <form class="form" method="POST" *ngIf="loginPage && !showPasswordRecoveryForm">
       <span class="input-span">
         <label for="email" class="label">Email</label>
         <input type="email" name="email" id="email" required #email/>
@@ -16,13 +16,24 @@
         <label for="password" class="label">Password</label>
         <input type="password" name="password" id="password" required #password/>
       </span>
-      <span class="span"><a>Forgot password?</a></span>
-      <!-- TODO coming soon! must allow the user to retrieve the password if forgotten -->
+      <span class="span" (click)="showPasswordRecoveryForm = true"><a>Forgot password?</a></span>
       <input class="submit" type="button" value="Log in" (click)="logIn()"/>
       <span class="span">Don't have an account? <a (click)="showSignUpPage()">Sign up</a></span>
     </form>
 
-    <form class="form" method="POST" *ngIf="!loginPage">
+    <form class="form" *ngIf="showPasswordRecoveryForm">
+      <h2>PostItter Password Recovery Service</h2>
+      <h4>Insert your recovery email, a link will be sent to you with the link and instructions to recover your
+        password. Don't forget to check your spam!</h4>
+      <span class="input-span">
+        <label for="emailInput">Email Address</label>
+        <input type="email" name="emailInput" id="emailInput" required #recoveryEmail>
+      </span>
+      <input type="button" value="Request Password Recover" class="submit"
+             (click)="requestPasswordRecovery(recoveryEmail.value)">
+    </form>
+
+    <form class="form" method="POST" *ngIf="!loginPage && !showPasswordRecoveryForm">
       <span class="input-span">
         <label for="email" class="label">Email</label>
         <input type="email" name="email" id="email1" required #email_signup/>
@@ -33,8 +44,10 @@
       </span>
       <span class="input-span">
         <label for="username" class="label">Username</label>
-        <input type="text" name="username" id="username" required (keyup)="checkAvailability(username.value)"
+        <input type="text" name="username" id="username" required
+               (keyup)="usernameInputs.next(username.value);"
                #username/>
+        <div *ngIf="!usernameAvailable" style="color: red;">Username not available!</div>
       </span>
       <span class="input-span">
         <label for="display-name" class="label">Display Name</label>

@@ -35,6 +35,8 @@ header img {
 #flex-container-posts {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 #pfp {

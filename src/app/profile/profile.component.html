@@ -9,7 +9,7 @@
   <main *ngIf="!isLoaded">
     <app-loader></app-loader>
   </main>
-  <main *ngIf="isLoaded">
+  <main *ngIf="userObservable | async as user">
     <div id="user-info">
       <img src="{{user?.profilePicture || 'blank.jpeg'}}" alt="" class="inline-blk" id="pfp">
       <div class="inline-blk buttons" style="font-size: larger">
@@ -24,12 +24,12 @@
               <p *ngIf="user?.posts">{{ user?.posts?.length }}</p>
               <p *ngIf="!user?.posts">0</p>
             </div>
-            <div class="inline-blk">
+            <div class="inline-blk" (click)="showFollowers()">
               <p>Followers</p>
               <p *ngIf="user?.followers">{{ user?.followers?.length }}</p>
               <p *ngIf="!user?.followers">0</p>
             </div>
-            <div class="inline-blk">
+            <div class="inline-blk" (click)="showFollowing()">
               <p>Following</p>
               <p *ngIf="user?.following">{{ user?.following?.length }}</p>
               <p *ngIf="!user?.following">0</p>
@@ -48,7 +48,9 @@
       </div>
     </div>
     <div id="flex-container-posts">
-      <app-post *ngFor="let post of user?.posts" [post]="post"></app-post>
+      <app-post *ngFor="let post of postsObservable | async" [post]="post" [currentUser]="user"
+                (commentWindow)="showCommentingWindow($event)" (shareWindow)="showSharingWindow($event)"
+                (click)="setLastClickedPost(post)"></app-post>
     </div>
 
     <div id="show-followers-overlay" *ngIf="showAllFollowers">
@@ -56,7 +58,7 @@
         <div><img src="/icons/cross.svg" alt="" width="20%"
                   style="float: right; border-radius: 50%; background: #aaaaaa" (click)="closeFollowersWindow()"></div>
         <h3>{{ user.username }}'s Followers</h3>
-        <div *ngIf="!user.followers || user.followers == 0" style="font-size: smaller">No followers</div>
+        <div *ngIf="!user.followers || user.followers.length == 0" style="font-size: smaller">No followers</div>
         <app-user *ngFor="let user of user.followers" [user]="user" routerLink="/users/{{user.id}}"></app-user>
       </div>
     </div>
@@ -66,10 +68,17 @@
         <div><img src="/icons/cross.svg" alt="" width="20%"
                   style="float: right; border-radius: 50%; background: #aaaaaa" (click)="closeFollowingWindow()"></div>
         <h3>{{ user.username }}'s Followings</h3>
-        <div *ngIf="!user.following || user.following == 0" style="font-size: smaller">No followings</div>
+        <div *ngIf="!user.following || user.following.length == 0" style="font-size: smaller">No followings</div>
         <app-user *ngFor="let user of user.following" [user]="user" routerLink="/users/{{user.id}}"></app-user>
       </div>
     </div>
+
+    <app-comment *ngIf="showCommentWindow" (showCommentWindowChange)="closeCommentingWindow($event)"
+                 [post]="lastClickedPost"
+                 [currentUser]="user"></app-comment>
+    <app-share *ngIf="showShareWindow" (showShareWindowChange)="closeSharingWindow($event)"
+               [postToShare]="lastClickedPost"
+               [currentUSer]="user"></app-share>
 
   </main>
 </div>

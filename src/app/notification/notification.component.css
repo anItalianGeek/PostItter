@@ -1,12 +1,19 @@
 #main {
   display: flex;
   align-items: center;
+  flex-direction: row;
   background-color: whitesmoke;
   border-radius: 20px;
   min-width: 500px;
   max-width: 500px;
   margin: 5px 10px;
 }
+
+/*
+#main * {
+  display: inline-block;
+}
+*/
 
 #pfp {
   border: 1px solid black;
@@ -17,4 +24,14 @@
 
 p {
   padding: 4px 8px;
+}
+
+button {
+  width: 100px;
+  height: 35px;
+  margin: 10px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 25px;
+  transition: 0.3s;
 }

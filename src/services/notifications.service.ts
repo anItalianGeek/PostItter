@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {NotificationData} from "../NotificationData";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {UserData} from "../UserData";
 
@@ -17,23 +17,36 @@ export class NotificationsService {
 
   // GET the existing notifications
   getNotificationsFromUser(id: string): Observable<NotificationData[]> {
-    return this.http.get<NotificationData[]>(this.url + '/api/notifications/get/' + id);
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    return this.http.get<NotificationData[]>(this.url + '/api/notifications/get/' + id, {headers: headers});
   }
 
-  // PUT a new notification
+  // POST a new notification
   addNewNotification(notification: NotificationData, user: UserData): void {
-    if (user.notifications) user.notifications.push(notification);
-    else user.notifications = [notification];
-    this.userService.updateUser(user);
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    this.http.post(this.url + '/api/notifications/newTo/' + user.id, notification, {headers: headers});
+  }
+
+  addNewTagNotification(notification: NotificationData, possibleUser: string) {
+    let params = new HttpParams().set('mention', possibleUser);
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    this.http.post(this.url + '/api/notifications/newTo', notification, {params: params, headers: headers});
   }
 
   // DELETE all notifications or specific one
   deleteAllNotifications(id: string): void {
-    this.http.delete(this.url + '/api/notifications/deleteAll/' + id);
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    this.http.delete(this.url + '/api/notifications/deleteAll/' + id, {headers: headers});
   }
 
   deleteSingleNotification(id: string): void {
-    this.http.delete(this.url + '/api/notifications/delete/' + id);
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    this.http.delete(this.url + '/api/notifications/delete/' + id, {headers: headers});
   }
 
   private notificationsAreEqual(n1: NotificationData, n2: NotificationData): boolean {

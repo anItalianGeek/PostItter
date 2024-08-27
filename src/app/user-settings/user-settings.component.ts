@@ -3,7 +3,7 @@ import {UserData} from "../../UserData";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {LoginService} from "../../services/login.service";
-import {forkJoin} from "rxjs";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-user-settings',
@@ -13,6 +13,7 @@ import {forkJoin} from "rxjs";
 export class UserSettingsComponent implements AfterViewInit, OnInit {
 
   isLoaded: boolean = false;
+  userDataObservable!: Observable<UserData>;
   user!: UserData;
   @ViewChild('darkMode', {static: false}) darkModeCB!: ElementRef<HTMLInputElement>;
   @ViewChild('privateProfile', {static: false}) privateProfileCB!: ElementRef<HTMLInputElement>;
@@ -34,6 +35,7 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
   accountDeletionProcess: boolean = false;
   deletionMessage: string = "";
   changesWereMade: boolean = false;
+  showBlockedUsers: boolean = false;
   interval: any;
 
   constructor(private router: Router, private userService: UserService, private loginService: LoginService) {
@@ -49,15 +51,14 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    forkJoin({
-      dataUser: this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub)
-    }).subscribe(
-      response => this.user = response.dataUser
-    );
+    this.userDataObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.userDataObservable.subscribe(res => {
+      this.user = res;
+      this.isLoaded = true;
+    });
   }
 
   ngAfterViewInit() {
-    console.log(this.user)
     this.revertChanges();
 
     this.pfp_selector.nativeElement.addEventListener('change', (event: Event) => {
@@ -188,6 +189,11 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
 
   logOut(): void {
     this.loginService.logOut();
+  }
+
+  unblockUser(user: UserData) {
+    if (confirm("Are you really sure you want to unblock" + user.username + "?"))
+      this.userService.unblockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, user);
   }
 
   deleteAccount(): void {

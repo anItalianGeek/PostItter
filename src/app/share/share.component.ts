@@ -4,6 +4,7 @@ import {forkJoin} from "rxjs";
 import {UserService} from "../../services/user.service";
 import {PostData} from "../../PostData";
 import {PostService} from "../../services/post.service";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-share',
@@ -17,7 +18,7 @@ export class ShareComponent implements OnInit {
   @Output() showShareWindowChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   possibleUsers!: UserData[];
 
-  constructor(private userService: UserService, private postService: PostService) {
+  constructor(private userService: UserService, private postService: PostService, private notificationService: NotificationsService) {
   }
 
   ngOnInit() {
@@ -40,6 +41,12 @@ export class ShareComponent implements OnInit {
     if (confirm(msg)) {
       // call message service
       this.postService.updatePost(this.postToShare, 'share');
+      this.notificationService.addNewNotification({
+        id: "",
+        type: "new-message",
+        user: this.currentUSer,
+        postId: this.postToShare.id
+      }, user);
       this.possibleUsers = this.possibleUsers.filter(element => element !== user);
     }
   }

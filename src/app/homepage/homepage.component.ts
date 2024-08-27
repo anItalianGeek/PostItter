@@ -4,7 +4,8 @@ import {Router} from "@angular/router";
 import {PostService} from "../../services/post.service";
 import {UserService} from "../../services/user.service";
 import {UserData} from "../../UserData";
-import {forkJoin} from "rxjs";
+import {Observable} from "rxjs";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-homepage',
@@ -14,15 +15,18 @@ import {forkJoin} from "rxjs";
 export class HomepageComponent implements OnInit {
 
   isLoaded: boolean = false;
+  postsObservable!: Observable<PostData[]>;
   posts: PostData[] = [];
+  userObservable!: Observable<UserData>;
   currentUser!: UserData;
   lastClickedPost!: PostData;
   createPostProcedure: boolean = false;
   showCommentWindow: boolean = false;
   showReportWindow: boolean = false;
   showShareWindow: boolean = false;
+  selectedColor: string = '';
 
-  constructor(private router: Router, private postService: PostService, private userService: UserService) {
+  constructor(private router: Router, private postService: PostService, private userService: UserService, private notificationService: NotificationsService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -35,12 +39,13 @@ export class HomepageComponent implements OnInit {
   }
 
   ngOnInit() {
-    forkJoin({
-      dataUser: this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub),
-      dataPosts: this.postService.getPosts()
-    }).subscribe(response => {
-      this.posts = response.dataPosts;
-      this.currentUser = response.dataUser;
+    this.userObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.postsObservable = this.postService.getPosts();
+    this.postsObservable.subscribe(response => {
+      this.posts = response;
+    });
+    this.userObservable.subscribe(response => {
+      this.currentUser = response;
     });
   }
 
@@ -48,9 +53,27 @@ export class HomepageComponent implements OnInit {
     this.createPostProcedure = true;
   }
 
-  confirmCreation() {
-    const post: PostData | undefined = undefined;
-    this.postService.addNewPost(post!);
+  confirmCreation(body: string, hashtags: string) {
+    if (!this.hashtagsValid(hashtags)) {
+      alert("Hashtags contain invalid characters!");
+      return;
+    }
+
+    const post: PostData = {
+      id: "",
+      body: body,
+      likes: 0,
+      reposts: 0,
+      shares: 0,
+      hashtags: hashtags.split(" "),
+      user: this.currentUser,
+      comments: [],
+      color: this.selectedColor
+    }
+
+    this.postService.addNewPost(post);
+    this.checkTags(body, post);
+    this.createPostProcedure = false;
   }
 
   cancelCreation() {
@@ -90,6 +113,62 @@ export class HomepageComponent implements OnInit {
       top: 0,
       behavior: "smooth"
     });
+  }
+
+  checkTags(s: string, post: PostData): void {
+    while (true) {
+      let idx = s.indexOf("@");
+      if (idx == -1)
+        return;
+      else {
+        s = s.substring(idx);
+        let possibleUser = s.substring(0, s.indexOf(" "));
+        this.notificationService.addNewTagNotification({
+          id: "",
+          postId: post.id,
+          type: "tag",
+          user: this.currentUser
+        }, possibleUser);
+      }
+    }
+  }
+
+  hashtagsValid(hashtags: string) {
+    for (let i = 0; i < hashtags.length; i++) {
+      switch (hashtags[i]) {
+        case '!':
+        case '@':
+        case '$':
+        case '%':
+        case '^':
+        case '&':
+        case '*':
+        case '(':
+        case ')':
+        case '+':
+        case '=':
+        case '{':
+        case '}':
+        case '[':
+        case ']':
+        case '|':
+        case '\\':
+        case ':':
+        case ';':
+        case '"':
+        case '\'':
+        case '<':
+        case '>':
+        case ',':
+        case '.':
+        case '/':
+        case '?':
+        case '`':
+        case '~':
+          return false;
+      }
+    }
+    return true;
   }
 
 }

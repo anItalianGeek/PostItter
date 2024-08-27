@@ -15,7 +15,8 @@
     </div>
     <div id="notifs-container">
       <div>
-        <app-notification *ngFor="let notification of myNotifs" [notification]="notification"
+        <app-notification *ngFor="let notification of myNotifsObservable | async"
+                          [notification]="notification"
                           (click)="clearSingleNotification(notification.id)"></app-notification>
       </div>
     </div>

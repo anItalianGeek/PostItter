@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {UserData} from "../UserData";
+import {NotificationData} from "../NotificationData";
 
 @Injectable({
   providedIn: 'root'
@@ -16,22 +17,21 @@ export class UserService {
   // GET the existing users
   getUserById(id: string): Observable<UserData> {
     let params = new HttpParams().set('currentUser', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
-    return this.http.get<UserData>(this.url + '/api/users/' + id, {params: params});
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    return this.http.get<UserData>(this.url + '/api/users/' + id, {params: params, headers: headers});
   }
 
   getFollowers(id: string): Observable<UserData[] | undefined> {
-    return this.http.get<UserData[]>(this.url + 'api/users/' + id + '/followers');
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    return this.http.get<UserData[]>(this.url + 'api/users/' + id + '/followers', {headers: headers});
   }
 
   getFollowing(id: string): Observable<UserData[] | undefined> {
-    return this.http.get<UserData[]>(this.url + 'api/users/' + id + '/following');
-  }
-
-  // POST new user to the server
-  addNewUser(userData: UserData): void {
-    this.http.post(this.url + '/api/users/' + userData.id, userData).subscribe({
-      next: value => console.log('user added succesfully!', value),
-    });
+    const jwt = localStorage.getItem('auth-token');
+    const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
+    return this.http.get<UserData[]>(this.url + 'api/users/' + id + '/following', {headers: headers});
   }
 
   blockUser(id: string, userData: UserData): void {
@@ -50,10 +50,10 @@ export class UserService {
     })
   }
 
-  followUser(id: string, followerId: string): void {
+  followUser(id: string, followerId: string, notification?: NotificationData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/users/' + id + '/follow' + followerId, {headers: headers});
+    this.http.post(this.url + '/api/users/' + id + '/follow' + followerId, notification, {headers: headers});
   }
 
   unfollowUser(id: string, followerId: string): void {

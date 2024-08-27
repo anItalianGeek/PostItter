@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Outpu
 import {PostData} from "../../PostData";
 import {PostService} from "../../services/post.service";
 import {UserData} from "../../UserData";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-post',
@@ -22,7 +23,7 @@ export class PostComponent implements OnInit, AfterViewInit {
   @Output() shareWindow: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() reportWindow: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private postService: PostService) {
+  constructor(private postService: PostService, private notificationService: NotificationsService) {
     this.userOptionsDropdownShown = false;
   }
 
@@ -67,6 +68,12 @@ export class PostComponent implements OnInit, AfterViewInit {
       else
         this.currentUser.likedPosts = [this.post];
       this.postService.updatePost(this.post, 'add-like');
+      this.notificationService.addNewNotification({
+        id: "",
+        user: this.currentUser,
+        postId: this.post.id,
+        type: "new-like"
+      }, this.post.user);
       target.src = '/icons/heart-liked.png';
     } else {
       this.currentUser.likedPosts = this.currentUser.likedPosts?.filter(post => post.id !== this.post.id);
@@ -103,6 +110,7 @@ export class PostComponent implements OnInit, AfterViewInit {
   reportPost() {
     if (confirm("Are you COMPLETELY sure you want to report this post? No further action is required! Admins will analyze this post.")) {
       // send report
+      alert("Thank you for helping us keep PostItter a better place! Our admins will give a close look to the post.");
     }
   }
 

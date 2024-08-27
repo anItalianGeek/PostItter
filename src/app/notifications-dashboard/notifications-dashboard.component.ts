@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {NotificationData} from "../../NotificationData";
 import {NotificationsService} from "../../services/notifications.service";
+import {map, Observable} from "rxjs";
 
 @Component({
   selector: 'app-notifications-dashboard',
@@ -11,7 +12,7 @@ import {NotificationsService} from "../../services/notifications.service";
 export class NotificationsDashboardComponent implements OnInit {
 
   isLoaded: boolean = false;
-  myNotifs: NotificationData[] = [];
+  myNotifsObservable!: Observable<NotificationData[]>;
 
   constructor(private router: Router, private notificationService: NotificationsService) {
     let token = localStorage.getItem('auth-token');
@@ -26,24 +27,28 @@ export class NotificationsDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.notificationService.getNotificationsFromUser((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
-      this.myNotifs = res;
-      this.isLoaded = true;
-    });
+    this.myNotifsObservable = this.notificationService.getNotificationsFromUser((JSON.parse(localStorage.getItem('auth-token')!)).sub);
   }
 
   clearNotifications() {
     if (confirm('Are you really sure you want to delete all notifications?')) {
       this.notificationService.deleteAllNotifications((JSON.parse(localStorage.getItem('auth-token')!)).sub);
-      this.myNotifs = [];
+      this.myNotifsObservable = this.myNotifsObservable.pipe(
+        map(notifs => {
+          return [];
+        })
+      );
     }
   }
 
   clearSingleNotification(id: string): void {
     if (confirm('Are you sure you want to delete the selected notification?')) {
       this.notificationService.deleteSingleNotification(id);
-      this.myNotifs = this.myNotifs.filter(elem => elem.id != id);
+      this.myNotifsObservable = this.myNotifsObservable.pipe(
+        map(notifs => notifs.filter(notif => notif.id !== id))
+      );
     }
   }
+
 
 }

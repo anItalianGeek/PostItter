@@ -2,6 +2,8 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserData} from "../../UserData";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
+import {Observable, of} from "rxjs";
+import {PostData} from "../../PostData";
 
 @Component({
   selector: 'app-profile',
@@ -13,9 +15,14 @@ export class ProfileComponent implements OnInit {
   isLoaded: boolean = false;
   @ViewChild('filters', {static: false}) searchFilters!: ElementRef<HTMLElement>;
   activatedFilter = 3;
+  postsObservable!: Observable<PostData[]>;
+  userObservable!: Observable<UserData>;
   user!: UserData;
+  lastClickedPost!: PostData;
   showAllFollowers: boolean = false;
   showAllFollowing: boolean = false;
+  showCommentWindow: boolean = false;
+  showShareWindow: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private userService: UserService) {
     let token = localStorage.getItem('auth-token');
@@ -30,10 +37,12 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(res => {
-      this.user = res;
-      this.isLoaded = true
+    this.userObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.userObservable.subscribe(user => {
+      this.user = user;
+      this.postsObservable = of(user.posts!)
     });
+    this.isLoaded = true;
   }
 
   changeFilter(index: number): void {
@@ -58,4 +67,23 @@ export class ProfileComponent implements OnInit {
     this.showAllFollowing = false;
   }
 
+  closeCommentingWindow(event: any): void {
+    this.showCommentWindow = false;
+  }
+
+  showCommentingWindow(event: any): void {
+    this.showCommentWindow = true;
+  }
+
+  showSharingWindow(event: any): void {
+    this.showShareWindow = true;
+  }
+
+  closeSharingWindow(event: any): void {
+    this.showShareWindow = false;
+  }
+
+  setLastClickedPost(post: PostData) {
+    this.lastClickedPost = post;
+  }
 }
