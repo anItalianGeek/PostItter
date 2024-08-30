@@ -5,6 +5,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {WebSocketSubject} from 'rxjs/webSocket';
 import {DatePipe} from "@angular/common";
 import {Chat} from "../../Chat";
+import {UserData} from "../../UserData";
+import {map, Observable, of} from "rxjs";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-chat-detail',
@@ -15,9 +18,11 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
 
   currentChat!: Chat;
   chatMessages: Message[] = [];
+  showPossibleChatters: boolean = false;
+  possibleChatters!: Observable<UserData[]>;
   private chatSocket!: WebSocketSubject<any>;
 
-  constructor(private router: Router, private messageService: MessageService, private route: ActivatedRoute, private datePipe: DatePipe) {
+  constructor(private router: Router, private messageService: MessageService, private userService: UserService, private route: ActivatedRoute, private datePipe: DatePipe) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -34,6 +39,14 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
       this.messageService.getSigleChatData(params.get('id')!).subscribe(response => this.currentChat = response);
       this.messageService.getMessagesFromChat(params.get('id')!).subscribe(response => this.chatMessages = response);
       this.initializeWebSocketConnection(params.get('id')!);
+    });
+
+    this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(user => {
+      this.possibleChatters = of(user.following!);
+      this.possibleChatters = this.possibleChatters.pipe(map(obs => {
+        obs.push(...user.followers!);
+        return obs;
+      }))
     });
   }
 
@@ -54,6 +67,20 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  startChat(): void {
+    this.showPossibleChatters = true;
+  }
+
+  createChat(user: UserData): void {
+    this.showPossibleChatters = false;
+    this.messageService.createChat(user.id)
+    alert(user.username + " has been added to the chat!");
+  }
+
+  stopChatCreation(): void {
+    this.showPossibleChatters = false;
+  }
+
   viewAttachment(url: string): void {
     if (confirm("Do you want to open the following link: " + url + "? Remember that opening a link might be dangerous. Only open it if you fully trust the source or the sender of the link.")) {
       window.open(url, "_blank");
@@ -63,6 +90,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
   sendMessage(content: string, files: FileList | null): void {
     let message: Message = {
       content: content,
+      file_url: "",
       sender_username: (JSON.parse(localStorage.getItem('auth-token')!)).username,
       sent_at: new Date()
     };

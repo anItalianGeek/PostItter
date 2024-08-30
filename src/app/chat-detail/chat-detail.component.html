@@ -23,5 +23,21 @@
       <input type="text" placeholder="Type your message here..." #messageInput>
       <button id="send" (click)="sendMessage(messageInput.value, filePicker.files)"></button>
     </div>
+
+    <div id="add-users-to-chat" (click)="startChat()">
+      <span><img src="/icons/add.svg" alt="" width="20%"></span>
+      <span>Add Members</span>
+    </div>
+
+    <div id="start-chat-overlay" *ngIf="showPossibleChatters">
+      <div id="start-chat-modal">
+        <div>
+        <span style="float: right;" (click)="stopChatCreation()"><img src="/icons/cross.svg" alt="" width="20%"
+                                                                      style="border-radius: 50%;"></span>
+        </div>
+        <app-user *ngFor="let chatter of possibleChatters | async" [user]="chatter"
+                  (click)="createChat(chatter)"></app-user>
+      </div>
+    </div>
   </main>
 </div>
