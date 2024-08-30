@@ -1,0 +1,23 @@
+#main {
+  max-width: 800px;
+  width: 100%;
+  height: 75px;
+  padding: 5px;
+  border-radius: 25px;
+}
+
+#main * {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+#chat-name {
+  font-weight: bold;
+}
+
+img {
+  z-index: 500;
+  border-radius: 50%;
+  border: 1px solid black;
+  float: right;
+}

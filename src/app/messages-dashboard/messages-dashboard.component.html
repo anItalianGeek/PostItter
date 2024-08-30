@@ -10,6 +10,20 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="isLoaded">
-    Messaging system coming soon!
+    <app-chat *ngFor="let chat of userChats | async" [chat]="chat"></app-chat>
   </main>
+  <div id="new-chat" (click)="startChat()">
+    <img src="/icons/at.svg" alt="" width="20%">
+    <span>Start A New Chat</span>
+  </div>
+  <div id="start-chat-overlay" *ngIf="showPossibleChatters">
+    <div id="start-chat-modal">
+      <div>
+        <span style="float: right;" (click)="stopChatCreation()"><img src="/icons/cross.svg" alt="" width="20%"
+                                                                      style="border-radius: 50%;"></span>
+      </div>
+      <app-user *ngFor="let chatter of possibleChatters | async" [user]="chatter"
+                (click)="createChat(chatter)"></app-user>
+    </div>
+  </div>
 </div>

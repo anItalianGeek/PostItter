@@ -88,4 +88,10 @@ export class UserService {
     })
   }
 
+  removeTwoFA(): void {
+    let token = JSON.parse(localStorage.getItem('auth-token')!);
+    let params = new HttpParams().set('id_active_user', token.sub);
+    let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
+    this.http.delete(this.url + 'api/2fa', {headers: headers, params: params});
+  }
 }

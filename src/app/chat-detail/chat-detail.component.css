@@ -1,0 +1,38 @@
+#input {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#message-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#send {
+  background-image: url("/public/icons/paper-plane.svg");
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+  border-style: hidden;
+  border-radius: 50%;
+}
+
+#upload {
+  background-image: url("/public/icons/upload.svg");
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+  border-style: hidden;
+  border-radius: 50%;
+}
+
+input[type="text"] {
+  max-width: 800px;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid gray;
+}

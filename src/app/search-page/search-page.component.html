@@ -25,7 +25,10 @@
     </div>
   </main>
   <article>
-    <app-user *ngFor="let user of users" [user]="user"></app-user>
-    <app-post *ngFor="let post of posts" [post]="post"></app-post>
+    <ng-container *ngFor="let item of responseData">
+      <app-user *ngIf="isUserData(item)" [user]="item" routerLink="/users/{{item.id}}"></app-user>
+      <app-post *ngIf="isPostData(item)" [post]="item"></app-post>
+    </ng-container>
   </article>
+
 </div>

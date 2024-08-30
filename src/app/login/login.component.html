@@ -7,7 +7,7 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="isLoaded">
-    <form class="form" method="POST" *ngIf="loginPage && !showPasswordRecoveryForm">
+    <form class="form" method="POST" *ngIf="loginPage && !showPasswordRecoveryForm && !requestCode">
       <span class="input-span">
         <label for="email" class="label">Email</label>
         <input type="email" name="email" id="email" required #email/>
@@ -33,7 +33,15 @@
              (click)="requestPasswordRecovery(recoveryEmail.value)">
     </form>
 
-    <form class="form" method="POST" *ngIf="!loginPage && !showPasswordRecoveryForm">
+    <form class="form" *ngIf="requestCode">
+      <span class="input-span">
+        <label for="codeInput">Enter Your Authenticator Code:</label>
+        <input type="hidden" name="codeInput" id="codeInput" required #authCode>
+      </span>
+      <input type="button" value="Authenticate" class="submit" (click)="logInWith2faCode(authCode.value)">
+    </form>
+
+    <form class="form" method="POST" *ngIf="!loginPage && !showPasswordRecoveryForm && !requestCode">
       <span class="input-span">
         <label for="email" class="label">Email</label>
         <input type="email" name="email" id="email1" required #email_signup/>

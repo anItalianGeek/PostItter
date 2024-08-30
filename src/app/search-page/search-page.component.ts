@@ -1,8 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserData} from "../../UserData";
 import {PostData} from "../../PostData";
-import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap} from "rxjs";
+import {combineLatest, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap} from "rxjs";
 import {Router} from "@angular/router";
+import {SearchEngineService} from "../../services/search-engine.service";
 
 @Component({
   selector: 'app-search-page',
@@ -16,10 +17,11 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   @ViewChild('searchBar', {static: false}) searchBar!: ElementRef<HTMLInputElement>;
   responseData: (PostData | UserData)[] = [];
   searchKeywords: Subject<string> = new Subject<string>();
-  posts: PostData[] = [];
-  users: UserData[] = [];
+  posts: Observable<PostData[]> = new Observable();
+  users: Observable<UserData[]> = new Observable();
+  hashtags: Observable<PostData[]> = new Observable();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private searchEngineService: SearchEngineService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -53,8 +55,33 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
     this.searchKeywords.next(this.searchBar.nativeElement.value);
   }
 
-  retrieveData(keyword: string): Observable<any> {
-    return of([]); // TODO not implemented yet
+  retrieveData(keyword: string): Observable<any[]> {
+    switch (this.activatedFilter) {
+      case 0:
+        return this.searchEngineService.searchUsers(keyword);
+      case 1:
+        return this.searchEngineService.searchPosts(keyword);
+      case 2:
+        return this.searchEngineService.searchHashtags(keyword);
+      case 3:
+        return combineLatest([
+          this.searchEngineService.searchUsers(keyword),
+          this.searchEngineService.searchPosts(keyword),
+          this.searchEngineService.searchHashtags(keyword)
+        ]).pipe(
+          map(([users, posts, hashtags]) => [...users, ...posts, ...hashtags])
+        );
+      default:
+        return of([]);
+    }
+  }
+
+  isUserData(item: any): item is UserData {
+    return (item as UserData).username !== undefined;
+  }
+
+  isPostData(item: any): item is PostData {
+    return (item as PostData).body !== undefined;
   }
 
 }

@@ -11,6 +11,7 @@ import {LoginComponent} from "./login/login.component";
 import {PostDetailComponent} from "./post-detail/post-detail.component";
 import {UserDetailsComponent} from "./user-details/user-details.component";
 import {ProfileComponent} from "./profile/profile.component";
+import {ChatDetailComponent} from "./chat-detail/chat-detail.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'notifications', component: NotificationsDashboardComponent},
   {path: 'search', component: SearchPageComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'messages', component: MessagesDashboardComponent},
+  {path: 'chats', component: MessagesDashboardComponent},
+  {path: 'chats/:id', component: ChatDetailComponent},
   {path: 'user-settings', component: UserSettingsComponent},
   {path: 'users/:id', component: UserDetailsComponent},
   {path: 'about', component: AboutUsComponent},

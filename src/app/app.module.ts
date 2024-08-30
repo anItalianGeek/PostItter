@@ -25,6 +25,8 @@ import {CommentComponent} from './comment/comment.component';
 import {ReportComponent} from './report/report.component';
 import {FormsModule} from "@angular/forms";
 import { ShareComponent } from './share/share.component';
+import { ChatComponent } from './chat/chat.component';
+import { ChatDetailComponent } from './chat-detail/chat-detail.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { ShareComponent } from './share/share.component';
     LoaderComponent,
     CommentComponent,
     ReportComponent,
-    ShareComponent
+    ShareComponent,
+    ChatComponent,
+    ChatDetailComponent
   ],
   imports: [
     BrowserModule,

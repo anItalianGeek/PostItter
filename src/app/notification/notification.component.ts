@@ -62,7 +62,7 @@ export class NotificationComponent implements OnInit {
   }
 
   acceptRequest(): void {
-    this.userService.followUser(this.notification.user.id, (JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.userService.followUser(this.notification.user.id, (JSON.parse(localStorage.getItem('auth-token')!)).sub, this.notification);
   }
 
 }

@@ -1,0 +1,27 @@
+<div id="main">
+  <nav>
+    <app-navigation-side-bar></app-navigation-side-bar>
+  </nav>
+  <header>
+    <img routerLink="" src="/logo/logo-no-background-compact.png" alt="short-post-itter-logo" width="70px"
+         height="100px">
+  </header>
+  <main>
+    <div *ngFor="let message of chatMessages" id="message-list">
+      <div style="font-weight: bold;">{{ message.sender_username }} <small>{{ message.sent_at }}</small></div>
+      <div>
+        <div>{{ message.content }}</div>
+        <div *ngIf="message.file_url == message.content" style="display: inline-block"
+             (click)="viewAttachment(message.file_url!)">
+          <img src="/icons/link-alt.svg" alt="" width="20%" style="border-radius: 50%; border: 1px solid black">
+        </div>
+      </div>
+    </div>
+    <div id="input">
+      <input type="file" name="file-picker" id="file-picker" style="display: none" #filePicker>
+      <button id="upload" (click)="filePicker.click()"></button>
+      <input type="text" placeholder="Type your message here..." #messageInput>
+      <button id="send" (click)="sendMessage(messageInput.value, filePicker.files)"></button>
+    </div>
+  </main>
+</div>

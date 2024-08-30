@@ -115,6 +115,9 @@
             </label>
           </div>
         </div>
+        <div *ngIf="twoFACB.nativeElement.checked" class="inline-blk">
+          <button (click)="removeTwoFA()" style="width: 175px; height: 35px;">Remove 2fa</button>
+        </div>
       </div>
       <div id="unblockUsers">
         <span class="inline blk">Click the button to see blocked users (and click on them to unblock)</span>
@@ -207,7 +210,8 @@
 
     <div *ngIf="showBlockedUsers" id="blocked-users-overlay">
       <div id="blocked-users-modal">
-        <div id="close-image" style="display: flex; justify-content: flex-end; align-items: center"> <!-- TODO must align this fucking image -->
+        <div id="close-image" style="display: flex; justify-content: flex-end; align-items: center">
+          <!-- TODO must align this fucking image -->
           <div>
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%; float: right"
                  (click)="showBlockedUsers = false">

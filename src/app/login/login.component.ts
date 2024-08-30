@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {debounceTime, distinctUntilChanged, Subject, switchMap} from "rxjs";
 import {Router} from "@angular/router";
-import {LoginService, LoginUserInput} from "../../services/login.service";
+import {JwtWebToken, LoginService, LoginUserInput} from "../../services/login.service";
 
 @Component({
   selector: 'app-login',
@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   showPasswordRecoveryForm: boolean = false;
   usernameInputs: Subject<string> = new Subject<string>();
   usernameAvailable = false;
+  requestCode: boolean = false;
 
   constructor(private loginService: LoginService, private router: Router) {
     this.usernameInputs.pipe(
@@ -64,11 +65,26 @@ export class LoginComponent implements OnInit, AfterViewInit {
       password: this.password.nativeElement.value
     };
 
-    this.loginService.logIn(payload).subscribe(
-      (value) => {
-        localStorage.setItem('auth-token', JSON.stringify(value));
-        this.router.navigateByUrl('/home');
-      });
+    localStorage.setItem('temp-email', payload.email);
+
+    this.loginService.logIn(payload).subscribe(response => {
+      if (response.status === 200) {
+        const token = response.body as JwtWebToken;
+        localStorage.setItem('auth-token', JSON.stringify(token));
+        localStorage.removeItem('temp-email');
+      } else {
+        this.requestCode = true;
+      }
+    });
+  }
+
+  logInWith2faCode(code: string) {
+    this.loginService.logInWith2faCode(code).subscribe(response => {
+      localStorage.setItem('auth-token', JSON.stringify(response));
+      localStorage.removeItem('temp-email');
+      this.requestCode = false;
+      this.router.navigateByUrl('/home');
+    });
   }
 
   signUp(): void {

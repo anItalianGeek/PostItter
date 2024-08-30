@@ -196,6 +196,10 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
       this.userService.unblockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, user);
   }
 
+  removeTwoFA(): void {
+    this.userService.removeTwoFA();
+  }
+
   deleteAccount(): void {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     this.deletionMessage = "";
