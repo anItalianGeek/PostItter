@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {PostData} from "../PostData";
-import {UserService} from "./user.service";
 import {UserData} from "../UserData";
 
 @Injectable({
@@ -12,7 +11,7 @@ export class PostService {
 
   private url: string = "http://localhost:5265";
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(private http: HttpClient) {
   }
 
   // GET existing data
@@ -20,38 +19,35 @@ export class PostService {
     let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
-    return this.http.get<PostData[]>(this.url + '/api/posts', {params: params, headers: headers});
+    return this.http.get<PostData[]>(this.url + '/api/posts', {params: params})
   }
 
   getPostById(id: string): Observable<PostData> {
     let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
-    return this.http.get<PostData>(this.url + '/api/posts/' + id, {params: params, headers: headers});
+    return this.http.get<PostData>(this.url + '/api/posts/' + id, {params: params});
   }
 
   getPostsOfUser(userId: string): Observable<PostData[]> {
     let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
-    return this.http.get<PostData[]>(this.url + '/api/posts/user/' + userId, {params: params, headers: headers});
+    return this.http.get<PostData[]>(this.url + '/api/posts/user/' + userId, {params: params});
   }
 
   getPostsOfUserByFilter(userId: string, filter: string): Observable<PostData[]> {
     let params = new HttpParams().set('id_retrieving_user', (JSON.parse(localStorage.getItem('auth-token')!)).sub);
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
-    return this.http.get<PostData[]>(this.url + '/api/posts/user' + userId + '/' + filter, {
-      params: params,
-      headers: headers
-    });
+    return this.http.get<PostData[]>(this.url + '/api/posts/user' + userId + '/' + filter, {params: params});
   }
 
   // POST new posts on the server
-  addNewPost(post: PostData): void {
+  addNewPost(post: PostData): Observable<PostData> {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt, 'Content-Type': 'application/json'});
-    this.http.post<PostData>(this.url + '/api/posts/' + post.id, post, {headers: headers});
+    return this.http.post<PostData>(this.url + '/api/posts/new', post);
   }
 
   // PUT updated things on the server for a specific post
@@ -81,10 +77,11 @@ export class PostService {
 
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    const params = new HttpParams().set('action', action);
-    this.http.put<PostData>(this.url + '/api/posts/update/' + post.id, comment, {
-      headers: headers,
-      params: params
+    const params = new HttpParams().set('action', action).append('id_retrieving_user', (JSON.parse(jwt!)).sub);
+    this.http.put(this.url + '/api/posts/update/' + post.id, comment, {params: params}).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
     });
   }
 
@@ -92,6 +89,11 @@ export class PostService {
   deletePost(post: PostData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/posts/' + post.id, {headers});
+    this.http.delete(this.url + '/api/posts/delete/' + post.id).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
+    });
+
   }
 }

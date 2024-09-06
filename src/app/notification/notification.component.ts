@@ -38,10 +38,10 @@ export class NotificationComponent implements OnInit {
     }
   }
 
-  performAction(): void { // TODO obviously this method is not finished yet, routing is incomplete
+  performAction(): void {
     switch (this.notification.type) {
       case 'new-message':
-        // open chat, not implemented yet
+        this.router.navigateByUrl('/chats/' + this.notification.postId); // postId can be used as chatId here
         break;
       case 'new-follow':
       case 'request-follow':
@@ -51,12 +51,12 @@ export class NotificationComponent implements OnInit {
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         break;
       case 'new-comment':
+        localStorage.setItem('new-redirection', this.notification.postId + '-' + this.notification.user.id);
         this.router.navigateByUrl('/posts/' + this.notification.postId);
-        // navigate to entity
         break;
       case 'tag':
+        localStorage.setItem('new-redirection', this.notification.postId + '-' + this.notification.user.id);
         this.router.navigateByUrl('/posts/' + this.notification.postId);
-        // navigate to entity
         break;
     }
   }

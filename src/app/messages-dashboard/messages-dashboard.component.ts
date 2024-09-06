@@ -59,4 +59,5 @@ export class MessagesDashboardComponent implements OnInit {
     this.showPossibleChatters = false;
   }
 
+  protected readonly stop = stop;
 }

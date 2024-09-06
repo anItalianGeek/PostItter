@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {debounceTime, distinctUntilChanged, Subject, switchMap} from "rxjs";
+import {debounceTime, Subject, switchMap} from "rxjs";
 import {Router} from "@angular/router";
-import {JwtWebToken, LoginService, LoginUserInput} from "../../services/login.service";
+import {LoginService, LoginUserInput} from "../../services/login.service";
 
 @Component({
   selector: 'app-login',
@@ -20,28 +20,25 @@ export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('displayname', {static: false}) displayname!: ElementRef<HTMLInputElement>;
   loginPage: boolean = true;
   showPasswordRecoveryForm: boolean = false;
-  usernameInputs: Subject<string> = new Subject<string>();
-  usernameAvailable = false;
+  userInputs: Subject<void> = new Subject<void>();
+  usernameAvailable: boolean = false;
+  emailAvailable: boolean = false;
   requestCode: boolean = false;
 
   constructor(private loginService: LoginService, private router: Router) {
-    this.usernameInputs.pipe(
+    this.userInputs.pipe(
       debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(username => this.loginService.checkUsenameAvailability(username))
-    ).subscribe(response => this.usernameAvailable = response);
+      switchMap(content => this.loginService.checkDataAvailability(this.username.nativeElement.value, this.email_signup.nativeElement.value))
+    ).subscribe(response => {
+      console.log(response)
+      this.usernameAvailable = response[0];
+      this.emailAvailable = response[1];
+    });
+
   }
 
   ngOnInit() {
     this.isLoaded = true;
-    setInterval(() => {
-      if (!this.loginPage) {
-        if (this.usernameAvailable)
-          this.username.nativeElement.style.borderColor = '';
-        else
-          this.username.nativeElement.style.borderColor = 'red';
-      }
-    }, 500);
   }
 
   ngAfterViewInit(): void {
@@ -66,14 +63,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
     };
 
     localStorage.setItem('temp-email', payload.email);
-
-    this.loginService.logIn(payload).subscribe(response => {
-      if (response.status === 200) {
-        const token = response.body as JwtWebToken;
-        localStorage.setItem('auth-token', JSON.stringify(token));
-        localStorage.removeItem('temp-email');
-      } else {
+    this.loginService.checkIf2faIsActive(payload).subscribe(response => {
+      if (response) {
         this.requestCode = true;
+      } else {
+        this.loginService.logIn(payload).subscribe(response => {
+          localStorage.setItem('auth-token', JSON.stringify(response));
+          localStorage.removeItem('temp-email');
+          this.router.navigateByUrl('/home');
+        });
       }
     });
   }

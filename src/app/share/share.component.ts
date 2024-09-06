@@ -5,6 +5,7 @@ import {UserService} from "../../services/user.service";
 import {PostData} from "../../PostData";
 import {PostService} from "../../services/post.service";
 import {NotificationsService} from "../../services/notifications.service";
+import {MessageService} from "../../services/message.service";
 
 @Component({
   selector: 'app-share',
@@ -18,7 +19,7 @@ export class ShareComponent implements OnInit {
   @Output() showShareWindowChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   possibleUsers!: UserData[];
 
-  constructor(private userService: UserService, private postService: PostService, private notificationService: NotificationsService) {
+  constructor(private userService: UserService, private postService: PostService, private notificationService: NotificationsService, private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -39,7 +40,8 @@ export class ShareComponent implements OnInit {
   share(user: UserData): void {
     let msg: string = "Are you sure you want to share with " + user.username + "?";
     if (confirm(msg)) {
-      // call message service
+      // todo call message service (waiting for web hosting)
+
       this.postService.updatePost(this.postToShare, 'share');
       this.notificationService.addNewNotification({
         id: "",

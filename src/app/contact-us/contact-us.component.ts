@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-contact-us',
@@ -8,7 +9,7 @@ import {Router} from "@angular/router";
 })
 export class ContactUsComponent {
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');

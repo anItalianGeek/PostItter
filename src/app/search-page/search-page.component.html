@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main" #main>
   <nav>
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
@@ -27,7 +27,7 @@
   <article>
     <ng-container *ngFor="let item of responseData">
       <app-user *ngIf="isUserData(item)" [user]="item" routerLink="/users/{{item.id}}"></app-user>
-      <app-post *ngIf="isPostData(item)" [post]="item"></app-post>
+      <app-post *ngIf="isPostData(item)" [currentUser]="currentUser" [post]="item" class="post"></app-post>
     </ng-container>
   </article>
 

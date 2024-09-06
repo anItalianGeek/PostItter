@@ -1,3 +1,8 @@
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 #input {
   position: fixed;
   right: 20px;

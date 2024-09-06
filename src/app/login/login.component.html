@@ -36,7 +36,7 @@
     <form class="form" *ngIf="requestCode">
       <span class="input-span">
         <label for="codeInput">Enter Your Authenticator Code:</label>
-        <input type="hidden" name="codeInput" id="codeInput" required #authCode>
+        <input type="text" name="codeInput" id="codeInput" required #authCode>
       </span>
       <input type="button" value="Authenticate" class="submit" (click)="logInWith2faCode(authCode.value)">
     </form>
@@ -44,7 +44,10 @@
     <form class="form" method="POST" *ngIf="!loginPage && !showPasswordRecoveryForm && !requestCode">
       <span class="input-span">
         <label for="email" class="label">Email</label>
-        <input type="email" name="email" id="email1" required #email_signup/>
+        <input type="email" name="email" id="email1"
+               (keyup)="userInputs.next();"
+               required #email_signup/>
+        <div *ngIf="!emailAvailable" style="color: red;">Email not available!</div>
       </span>
       <span class="input-span">
         <label for="password" class="label">Password</label>
@@ -53,7 +56,7 @@
       <span class="input-span">
         <label for="username" class="label">Username</label>
         <input type="text" name="username" id="username" required
-               (keyup)="usernameInputs.next(username.value);"
+               (keyup)="userInputs.next();"
                #username/>
         <div *ngIf="!usernameAvailable" style="color: red;">Username not available!</div>
       </span>

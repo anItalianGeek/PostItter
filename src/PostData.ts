@@ -9,5 +9,5 @@ export interface PostData {
   reposts: number;
   shares: number;
   user: UserData;
-  color: string;
+  color?: string;
 }

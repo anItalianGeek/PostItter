@@ -22,6 +22,11 @@ header {
   background-color: #f0f0f0;
 }
 
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 header img {
   transform: translateY(-1px);
 }

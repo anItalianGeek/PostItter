@@ -5,6 +5,7 @@ import {UserData} from "../../UserData";
 import {PostData} from "../../PostData";
 import {NotificationsService} from "../../services/notifications.service";
 import {Observable, of} from "rxjs";
+import {MessageService} from "../../services/message.service";
 
 @Component({
   selector: 'app-user-details',
@@ -28,7 +29,7 @@ export class UserDetailsComponent implements OnInit {
   userFollowers!: Observable<UserData[]>;
   userFollowing!: Observable<UserData[]>;
 
-  constructor(private router: Router, private userService: UserService, private notificationService: NotificationsService, private route: ActivatedRoute) {
+  constructor(private router: Router, private messageService: MessageService, private userService: UserService, private notificationService: NotificationsService, private route: ActivatedRoute) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       this.router.navigateByUrl('/login');
@@ -88,7 +89,7 @@ export class UserDetailsComponent implements OnInit {
 
   unfollow(): void {
     this.userObservable.subscribe(user => {
-
+      this.userService.unfollowUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, user.id);
     });
   }
 
@@ -97,7 +98,9 @@ export class UserDetailsComponent implements OnInit {
   }
 
   message(): void {
-    // TODO must implement chatting service
+    this.userObservable.subscribe(user => {
+      this.messageService.createChat(user.id).subscribe(response => this.router.navigateByUrl('/chats/' + response.chatId));
+    })
   }
 
   block(): void {

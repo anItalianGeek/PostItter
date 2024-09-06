@@ -11,6 +11,11 @@
   margin: 0 10px;
 }
 
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 #chat-name {
   font-weight: bold;
 }

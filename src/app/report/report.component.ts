@@ -14,6 +14,9 @@ export class ReportComponent {
   @ViewChild('explanation', {static: false}) explanation!: ElementRef<HTMLTextAreaElement>;
   selectedOption: string = '';
 
+  constructor(private userService: UserService) {
+  }
+
   submitReport(): void {
     let explanation: string = this.explanation.nativeElement.value;
     let reason: string = this.selectedOption;

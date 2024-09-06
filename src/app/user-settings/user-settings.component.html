@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main" #main>
   <nav>
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
@@ -25,15 +25,15 @@
       <h2>Essentials</h2>
       <div id="change-username">
         <span class="inline-blk">Change Username</span>
-        <input type="text" placeholder="{{user.username}}" #changeUsername>
+        <input type="text" placeholder="{{user.username}}" #changeUsername (keyup)="startCheckingChanges()">
       </div>
       <div id="change-display-name">
         <span class="inline-blk">Change Display Name</span>
-        <input type="text" placeholder="{{user.displayName}}" #changeDisplayName>
+        <input type="text" placeholder="{{user.displayName}}" #changeDisplayName (keyup)="startCheckingChanges()">
       </div>
       <div id="change-bio">
         <span class="inline-blk">Change Bio</span>
-        <input type="text" placeholder="{{user.bio}}" #changeBio>
+        <input type="text" placeholder="{{user.bio}}" #changeBio (keyup)="startCheckingChanges()">
       </div>
       <div id="passowrd-change">
         <span class="inline-blk">Change Password</span>
@@ -50,7 +50,8 @@
         <span class="inline-blk">Dark Mode</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch0" type="checkbox" class="switch" #darkMode>
+            <input value="private" name="switch" id="switch0" type="checkbox" class="switch" #darkMode
+                   [checked]="user.darkMode" (click)="startCheckingChanges()"> <!---->
             <label for="switch0">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -69,7 +70,8 @@
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
             <input value="private" name="switch" id="switch" type="checkbox" class="switch"
-                   (click)="togglePrivateProfile()" #privateProfile>
+                   (click)="togglePrivateProfile()" #privateProfile [checked]="user.privateProfile"
+                   (click)="startCheckingChanges()">
             <label for="switch">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -85,7 +87,8 @@
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
             <input value="private" name="switch" id="switch1" type="checkbox" class="switch"
-                   (click)="toggleTextsFromAll()" [checked]="user.everyoneCanText" #everyoneCanText>
+                   (click)="toggleTextsFromAll(); startCheckingChanges()" [checked]="user.everyoneCanText"
+                   #everyoneCanText>
             <label for="switch1">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -105,7 +108,8 @@
         <span class="inline-blk">Enable 2 Factor Authentication</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch2" type="checkbox" class="switch" #twoFA>
+            <input value="private" name="switch" id="switch2" type="checkbox" class="switch" #twoFA
+                   [checked]="user.twoFA" (click)="startCheckingChanges()">
             <label for="switch2">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -115,7 +119,7 @@
             </label>
           </div>
         </div>
-        <div *ngIf="twoFACB.nativeElement.checked" class="inline-blk">
+        <div *ngIf="user.twoFA" class="inline-blk">
           <button (click)="removeTwoFA()" style="width: 175px; height: 35px;">Remove 2fa</button>
         </div>
       </div>
@@ -130,7 +134,8 @@
         <span class="inline-blk">Notify when like received</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch3" type="checkbox" class="switch" #likeNotif>
+            <input value="private" name="switch" id="switch3" type="checkbox" class="switch" #likeNotif
+                   [checked]="user.likeNotification" (click)="startCheckingChanges()">
             <label for="switch3">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -145,7 +150,8 @@
         <span class="inline-blk">Notify when comments received</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch4" type="checkbox" class="switch" #commentNotif>
+            <input value="private" name="switch" id="switch4" type="checkbox" class="switch" #commentNotif
+                   [checked]="user.commentNotification" (click)="startCheckingChanges()">
             <label for="switch4">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -160,7 +166,8 @@
         <span class="inline-blk">Notify for replies or posts where you are tagged</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch5" type="checkbox" class="switch" #replyNotif>
+            <input value="private" name="switch" id="switch5" type="checkbox" class="switch" #replyNotif
+                   [checked]="user.replyNotification" (click)="startCheckingChanges()">
             <label for="switch5">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -175,7 +182,8 @@
         <span class="inline-blk">Notify when getting a new follower</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch7" type="checkbox" class="switch" #followNotif>
+            <input value="private" name="switch" id="switch7" type="checkbox" class="switch" #followNotif
+                   [checked]="user.followNotification" (click)="startCheckingChanges()">
             <label for="switch7">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -190,7 +198,8 @@
         <span class="inline-blk">Notify when getting a new message</span>
         <div class="inline-blk">
           <div class="checkbox-wrapper-35">
-            <input value="private" name="switch" id="switch8" type="checkbox" class="switch" #messageNotif>
+            <input value="private" name="switch" id="switch8" type="checkbox" class="switch" #messageNotif
+                   [checked]="user.messageNotification" (click)="startCheckingChanges()">
             <label for="switch8">
               <span class="switch-x-text">This is </span>
               <span class="switch-x-toggletext">
@@ -210,10 +219,9 @@
 
     <div *ngIf="showBlockedUsers" id="blocked-users-overlay">
       <div id="blocked-users-modal">
-        <div id="close-image" style="display: flex; justify-content: flex-end; align-items: center">
-          <!-- TODO must align this fucking image -->
-          <div>
-            <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%; float: right"
+        <div id="close-image">
+          <div style="float: right">
+            <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
                  (click)="showBlockedUsers = false">
           </div>
         </div>
@@ -222,7 +230,7 @@
           <div *ngIf="!user.blockedUsers || user.blockedUsers?.length == 0"><small><i>No Blocked Users.</i></small>
           </div>
           <app-user *ngFor="let blockedUser of user.blockedUsers" [user]="blockedUser"
-                    (click)="unblockUser(user)"></app-user>
+                    (click)="unblockUser(blockedUser)"></app-user>
         </div>
       </div>
     </div>

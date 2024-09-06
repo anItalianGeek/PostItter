@@ -41,11 +41,14 @@ export class HomepageComponent implements OnInit {
   ngOnInit() {
     this.userObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
     this.postsObservable = this.postService.getPosts();
-    this.postsObservable.subscribe(response => {
-      this.posts = response;
-    });
     this.userObservable.subscribe(response => {
       this.currentUser = response;
+
+      this.postsObservable.subscribe(response => {
+        this.posts = response;
+
+        this.isLoaded = true;
+      });
     });
   }
 
@@ -71,8 +74,7 @@ export class HomepageComponent implements OnInit {
       color: this.selectedColor
     }
 
-    this.postService.addNewPost(post);
-    this.checkTags(body, post);
+    this.postService.addNewPost(post).subscribe(response => this.checkTags(body, response));
     this.createPostProcedure = false;
   }
 
@@ -116,22 +118,20 @@ export class HomepageComponent implements OnInit {
   }
 
   checkTags(s: string, post: PostData): void {
-    while (true) {
-      let idx = s.indexOf("@");
-      if (idx == -1)
-        return;
-      else {
-        s = s.substring(idx);
-        let possibleUser = s.substring(0, s.indexOf(" "));
-        this.notificationService.addNewTagNotification({
-          id: "",
-          postId: post.id,
-          type: "tag",
-          user: this.currentUser
-        }, possibleUser);
-      }
+    const tagRegex = /@([a-zA-Z0-9_]+)/g;
+    let match;
+
+    while ((match = tagRegex.exec(s)) !== null) {
+      const possibleUser = match[1];
+      this.notificationService.addNewTagNotification({
+        id: "",
+        postId: post.id,
+        type: "tag",
+        user: this.currentUser
+      }, possibleUser);
     }
   }
+
 
   hashtagsValid(hashtags: string) {
     for (let i = 0; i < hashtags.length; i++) {
@@ -171,4 +171,5 @@ export class HomepageComponent implements OnInit {
     return true;
   }
 
+  protected readonly localStorage = localStorage;
 }

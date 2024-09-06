@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Message} from "../../Message";
 import {MessageService} from "../../services/message.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -21,6 +21,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
   showPossibleChatters: boolean = false;
   possibleChatters!: Observable<UserData[]>;
   private chatSocket!: WebSocketSubject<any>;
+  @ViewChild('endOfChat', {static: false}) endOfChat!: ElementRef<HTMLDivElement>;
 
   constructor(private router: Router, private messageService: MessageService, private userService: UserService, private route: ActivatedRoute, private datePipe: DatePipe) {
     let token = localStorage.getItem('auth-token');
@@ -37,7 +38,7 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.messageService.getSigleChatData(params.get('id')!).subscribe(response => this.currentChat = response);
-      this.messageService.getMessagesFromChat(params.get('id')!).subscribe(response => this.chatMessages = response);
+      this.messageService.getMessagesFromChat(params.get('id')!).subscribe(response => {this.chatMessages = response; this.endOfChat.nativeElement.scrollIntoView({ behavior: 'smooth' });});
       this.initializeWebSocketConnection(params.get('id')!);
     });
 
@@ -114,4 +115,6 @@ export class ChatDetailComponent implements OnInit, OnDestroy {
 
     return `${day} ${time}`;
   }
+
+  protected readonly stop = stop;
 }

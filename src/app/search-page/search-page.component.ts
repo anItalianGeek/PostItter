@@ -4,6 +4,7 @@ import {PostData} from "../../PostData";
 import {combineLatest, debounceTime, distinctUntilChanged, map, Observable, of, Subject, switchMap} from "rxjs";
 import {Router} from "@angular/router";
 import {SearchEngineService} from "../../services/search-engine.service";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-search-page',
@@ -12,6 +13,7 @@ import {SearchEngineService} from "../../services/search-engine.service";
 })
 export class SearchPageComponent implements OnInit, AfterViewInit {
 
+  currentUser!: UserData;
   activatedFilter: number = 3;
   @ViewChild('filters', {static: false}) searchFilters!: ElementRef<HTMLElement>;
   @ViewChild('searchBar', {static: false}) searchBar!: ElementRef<HTMLInputElement>;
@@ -21,7 +23,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   users: Observable<UserData[]> = new Observable();
   hashtags: Observable<PostData[]> = new Observable();
 
-  constructor(private router: Router, private searchEngineService: SearchEngineService) {
+  constructor(private router: Router, private searchEngineService: SearchEngineService, private userService: UserService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -38,7 +40,11 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchKeyword => this.retrieveData(searchKeyword))
-    ).subscribe();
+    ).subscribe(data => this.responseData = data);
+
+    this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(user => {
+      this.currentUser = user
+    });
   }
 
   ngAfterViewInit(): void {

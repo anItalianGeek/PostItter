@@ -1,7 +1,7 @@
-<div id="create-comment-overlay">
+<div id="create-comment-overlay" #main>
   <div id="create-comment">
     <div *ngIf="post">
-      <app-post [post]="post"></app-post>
+      <app-post [post]="post" [currentUser]="currentUser" class="post"></app-post>
     </div>
     <h3>What is your comment going to be about... ?</h3>
     <textarea #content></textarea>

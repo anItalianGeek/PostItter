@@ -26,6 +26,11 @@
   justify-content: center;
 }
 
+.darkmode *:not(.post) {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 #add-posts-button * {
   margin: 2px 4px;
 }

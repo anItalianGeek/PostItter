@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UserData} from "../../UserData";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
@@ -10,7 +10,7 @@ import {Observable} from "rxjs";
   templateUrl: './user-settings.component.html',
   styleUrl: './user-settings.component.css'
 })
-export class UserSettingsComponent implements AfterViewInit, OnInit {
+export class UserSettingsComponent implements OnInit, OnDestroy {
 
   isLoaded: boolean = false;
   userDataObservable!: Observable<UserData>;
@@ -36,6 +36,7 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
   deletionMessage: string = "";
   changesWereMade: boolean = false;
   showBlockedUsers: boolean = false;
+  checkComponentLoad: any;
   interval: any;
 
   constructor(private router: Router, private userService: UserService, private loginService: LoginService) {
@@ -50,69 +51,84 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
     }
   }
 
+  startCheckingChanges(): void {
+    if (!this.interval)
+      this.interval = setInterval(() => {
+        this.checkIfChange()
+      }, 500);
+  }
+
   ngOnInit() {
     this.userDataObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
     this.userDataObservable.subscribe(res => {
       this.user = res;
       this.isLoaded = true;
+      this.checkComponentLoad = setInterval(() => {
+        this.addEventListener();
+      }, 750);
     });
   }
 
-  ngAfterViewInit() {
-    this.revertChanges();
+  addEventListener() {
+    if (this.pfp_selector && this.pfp_selector.nativeElement) {
+      this.pfp_selector.nativeElement.addEventListener('change', (event: Event) => {
+        const component = event.target as HTMLInputElement;
+        if (component.files && component.files.length > 0) {
+          const file = component.files[0];
 
-    this.pfp_selector.nativeElement.addEventListener('change', (event: Event) => {
-      const component = event.target as HTMLInputElement;
-      if (component.files && component.files.length > 0) {
-        const file = component.files[0];
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
+          reader.onload = (e: ProgressEvent<FileReader>) => {
+            const img = new Image();
+            img.src = e.target!.result as string;
 
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-          const img = new Image();
-          img.src = e.target!.result as string;
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
 
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+              // Set canvas size to 512x512
+              canvas.width = 512;
+              canvas.height = 512;
 
-            // Set canvas size to 512x512
-            canvas.width = 512;
-            canvas.height = 512;
+              // Draw the image onto the canvas, scaling it to 512x512
+              ctx?.drawImage(img, 0, 0, 512, 512);
 
-            // Draw the image onto the canvas, scaling it to 512x512
-            ctx?.drawImage(img, 0, 0, 512, 512);
+              // Convert the canvas back to a Blob (or Base64 string)
+              canvas.toBlob((blob: Blob | null) => {
+                if (blob) {
+                  // Now you can upload 'blob' as your resized image
+                  // For example, you could use a formData object to send it to your server
+                  const formData = new FormData();
+                  let extension: string = file.name.substring(file.name.indexOf('.'));
+                  formData.append('file', blob, this.user.username + extension);
 
-            // Convert the canvas back to a Blob (or Base64 string)
-            canvas.toBlob((blob: Blob | null) => {
-              if (blob) {
-                // Now you can upload 'blob' as your resized image
-                // For example, you could use a formData object to send it to your server
-                const formData = new FormData();
-                let extension: string = file.name.substring(file.name.indexOf('.'));
-                formData.append('file', blob, this.user.username + extension);
+                  this.user.profilePicture = this.user.username + extension;
+                  // TODO push picture to cloud
+                }
+              }, file.type);
+            };
 
-                this.user.profilePicture = this.user.username + extension;
-                // TODO push picture to cloud
-              }
-            }, file.type);
+            component.files = null; // reset important values to allow the next file to be read correctly
+            component.value = '';
           };
+        }
+      });
 
-          component.files = null; // reset important values to allow the next file to be read correctly
-          component.value = '';
-        };
-      }
-    });
+      clearInterval(this.checkComponentLoad);
+    }
+  }
 
-    this.interval = setInterval(() => {
-      console.log("interval triggered");
-      this.checkIfChange();
-    }, 500);
+  ngOnDestroy() {
+    if (this.interval)
+      clearInterval(this.interval);
   }
 
   checkIfChange(): void {
     if (
+      this.changeUsername.nativeElement.value != '' &&
+      this.changeDisplayName.nativeElement.value != '' &&
+      this.changeBio.nativeElement.value != '' &&
       this.user.darkMode == this.darkModeCB.nativeElement.checked &&
       this.user.privateProfile == this.privateProfileCB.nativeElement.checked &&
       (this.user.privateProfile || this.user.everyoneCanText == this.everyoneCanTextCB?.nativeElement.checked) && // skip check if profile is private!
@@ -124,7 +140,6 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
       this.user.messageNotification == this.messageNotifCB.nativeElement.checked
     ) this.changesWereMade = false;
     else this.changesWereMade = true;
-    console.log('checked!! changesWereMade is ', this.changesWereMade)
   }
 
   togglePrivateProfile(): void {
@@ -145,6 +160,27 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
         this.confirmPasswordInput.nativeElement.value)
         this.userService.updatePassword(this.confirmPasswordInput.nativeElement.value);
     }
+
+    if (this.changeBio.nativeElement.value != '')
+      this.user.bio = this.changeBio.nativeElement.value;
+    if (this.changeUsername.nativeElement.value != '')
+      this.user.username = this.changeUsername.nativeElement.value;
+    if (this.changeDisplayName.nativeElement.value != '')
+      this.user.displayName = this.changeDisplayName.nativeElement.value;
+    this.user.darkMode = this.darkModeCB.nativeElement.checked;
+    this.user.privateProfile = this.privateProfileCB.nativeElement.checked;
+    if (this.user.privateProfile)
+      this.user.everyoneCanText = false;
+    else
+      this.user.everyoneCanText = this.everyoneCanTextCB?.nativeElement.checked;
+    this.user.twoFA = this.twoFACB.nativeElement.checked;
+    this.user.commentNotification = this.commentNotifCB.nativeElement.checked;
+    this.user.replyNotification = this.replyNotifCB.nativeElement.checked;
+    this.user.followNotification = this.followNotifCB.nativeElement.checked;
+    this.user.likeNotification = this.likeNotifCB.nativeElement.checked;
+    this.user.messageNotification = this.messageNotifCB.nativeElement.checked;
+
+    localStorage.setItem('app-theme', this.darkModeCB.nativeElement.checked ? 'dark' : 'light');
 
     this.userService.updateUser(this.user);
   }
@@ -192,7 +228,7 @@ export class UserSettingsComponent implements AfterViewInit, OnInit {
   }
 
   unblockUser(user: UserData) {
-    if (confirm("Are you really sure you want to unblock" + user.username + "?"))
+    if (confirm("Are you really sure you want to unblock " + user.username + "?"))
       this.userService.unblockUser((JSON.parse(localStorage.getItem('auth-token')!)).sub, user);
   }
 

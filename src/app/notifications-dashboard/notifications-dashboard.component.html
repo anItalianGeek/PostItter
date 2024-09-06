@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main" #main>
   <nav>
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
@@ -20,5 +20,9 @@
                           (click)="clearSingleNotification(notification.id)"></app-notification>
       </div>
     </div>
+    <div *ngIf="noNotifs" style="display: flex; align-items: center; justify-content: center;">No notifications</div>
+    <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0"><small><i>Click on the pfp
+      to take action,
+      click somewhere else to delete the notification.</i></small></div>
   </main>
 </div>

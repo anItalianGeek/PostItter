@@ -10,8 +10,8 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="postDataObservable | async as post">
-    <div id="flex-container" (load)="isLoaded = true">
-      <div id="post" #postref>
+    <div id="flex-container">
+      <div id="post" class="post" #postref>
         <div id="user">
           <div id="pfp" routerLink="/users/{{post?.user?.id}}"><img
             src="{{post?.user?.profilePicture || 'blank.jpeg'}}"></div>
@@ -39,9 +39,9 @@
             </div>
           </div>
         </div>
-        <div class="post-content" routerLink="/posts/{{post?.id}}" #postcontent1>
-          <p #postcontent2>{{ post?.body }}</p><br>
-          <p #postcontent3>
+        <div class="post-content" routerLink="/posts/{{post?.id}}">
+          <p>{{ post?.body }}</p><br>
+          <p>
             <span *ngFor="let hash of post?.hashtags" style="color: lightblue">#{{ hash }} </span>
           </p>
         </div>
@@ -67,7 +67,7 @@
           </ul>
         </div>
       </div>
-      <div class="comment" *ngFor="let comment of post?.comments">
+      <div class="comment" *ngFor="let comment of post?.comments;">
         <div id="comment-info">
           <img src="{{comment?.user?.profilePicture}}" alt="" width="40px" height="40px" class="inline-blk"
                style="border-radius: 50%; margin: 5px;">
@@ -78,6 +78,9 @@
         </div>
         <div class="post-content">{{ comment?.content }}</div>
       </div>
+      <div *ngIf="!post.comments || post.comments.length == 0" #no_content
+           style="display: flex; justify-content: center; align-items: center; margin: 40px 0"><small><i>No comments
+        yet.</i></small></div>
     </div>
 
     <app-report *ngIf="showReportPanel" (showReportWindowChange)="stopReportingDetail($event)"

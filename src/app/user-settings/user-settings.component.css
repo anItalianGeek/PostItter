@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 #main {
   position: relative;
   left: 22%;
@@ -64,9 +69,11 @@ button {
 }
 
 #save-changes-overlay {
-  position: relative;
-  display: none;
+  position: fixed;
+  transform: translateX(-200px);
+  display: flex;
   justify-content: center;
+  z-index: 100;
   align-items: center;
   opacity: 0;
   width: 100%;
@@ -75,6 +82,14 @@ button {
   animation-duration: 1s;
   transition-timing-function: ease-in-out;
   animation-fill-mode: forwards;
+}
+
+#save-changes {
+  background-color: #f0f0f0;
+  border-style: hidden;
+  border-radius: 25px;
+  z-index: 101;
+  padding: 10px 15px;
 }
 
 @keyframes saveChangesPopup {
@@ -113,6 +128,10 @@ button {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+#blocked-users-modal {
+  max-width: 650px;
 }
 
 #log-out:hover, .delete-account {

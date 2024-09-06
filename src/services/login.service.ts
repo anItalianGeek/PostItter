@@ -14,13 +14,18 @@ export class LoginService {
   }
 
   // POST the login request to the server and get a token
-  logIn(payload: LoginUserInput): Observable<any> {
-    return this.http.post('http://localhost:5265/api/login', payload, {observe: 'response'});
+  logIn(payload: LoginUserInput): Observable<JwtWebToken> {
+    return this.http.post<JwtWebToken>(this.url + '/api/authguard/login', payload);
   }
 
   logInWith2faCode(code: string): Observable<JwtWebToken> {
-    let params = new HttpParams().set('email_active_use', localStorage.getItem('temp-email') || "")
-    return this.http.post<JwtWebToken>('http://localhost:5265/api/2fa/authenticate', code, {params: params});
+    let params = new HttpParams().set('email_active_user', localStorage.getItem('temp-email')!);
+    return this.http.post<JwtWebToken>(this.url + '/api/2fa/authenticate', code, {params: params});
+  }
+
+  checkIf2faIsActive(payload: LoginUserInput): Observable<boolean> {
+    const params = new HttpParams().set('email_user', payload.email);
+    return this.http.get<boolean>(this.url + '/api/authguard/2faCheck', {params: params});
   }
 
   // POST the sign-up request
@@ -32,19 +37,19 @@ export class LoginService {
   logOut() {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/authguard/logout', {headers});
+    this.http.delete(this.url + '/api/authguard/logout');
     localStorage.removeItem('auth-token');
     this.router.navigateByUrl('/login');
   }
 
   // GET information about a desired username, whether it is available or not
-  checkUsenameAvailability(username: string): Observable<boolean> {
-    let params = new HttpParams().set('name', username);
-    return this.http.get<boolean>(this.url + 'api/authguard/check', {params: params});
+  checkDataAvailability(username: string, email: string): Observable<boolean[]> {
+    let params = new HttpParams().set('name', username).append('email', email);
+    return this.http.get<boolean[]>(this.url + '/api/authguard/check', {params: params});
   }
 
   requestPasswordRecovery(recoveryEmail: string) {
-    this.http.post(this.url + 'api/PasswordRecovery/requestChange', recoveryEmail);
+    this.http.post(this.url + '/api/PasswordRecovery/requestChange', recoveryEmail);
   }
 }
 

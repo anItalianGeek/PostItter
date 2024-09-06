@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main" #main>
   <nav>
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
@@ -13,7 +13,7 @@
   <main *ngIf="isLoaded"> <!-- postObservable | async as posts (ngIf in <main>) -->
     <app-post *ngFor="let post of postsObservable | async" [post]="post" [currentUser]="currentUser"
               (commentWindow)="openCommentWindow($event)" (shareWindow)="openShareWindow($event)"
-              (reportWindow)="openReportWindow($event)" (click)="setLastClickedPost(post)"></app-post>
+              (reportWindow)="openReportWindow($event)" (click)="setLastClickedPost(post)" class="post"></app-post>
   </main>
 
   <div id="add-posts-button" (click)="createPost()">
@@ -21,7 +21,8 @@
     <span>Create a Post</span>
   </div>
 
-  <div id="create-post-overlay" *ngIf="createPostProcedure">
+  <div id="create-post-overlay" *ngIf="createPostProcedure"
+       [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
     <div id="create-post">
       <h3>What is your new post going to be about... ?</h3>
       <textarea id="post-content" maxlength="320" #content></textarea>

@@ -29,30 +29,13 @@ export class PostComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     let id: string = (JSON.parse(localStorage.getItem('auth-token')!)).sub;
-    this.ownedByActiveUser = this.post.id === id;
+    this.ownedByActiveUser = this.post.user.id === id;
+    if (this.currentUser.likedPosts?.find(e => e.id === this.post.id))
+      (document.getElementsByClassName('icon')[0].firstElementChild as HTMLImageElement).src = '/icons/heart-liked.png';
   }
 
   ngAfterViewInit() {
-    const jwt = JSON.parse(localStorage.getItem('auth-token')!);
-
-    let color: string[] = this.post.color.substring(4, this.post.color.length - 1).split(",");
-    let darkColor: number[] = [0, 0, 0];
-    for (let i = 0; i < 3; i++) {
-      darkColor[i] = Math.floor(Number(color[i]) * 0.85);
-    }
-    let _darkColor = "rgb(" + darkColor[0] + "," + darkColor[1] + "," + darkColor[2] + ");";
-
-    if (jwt.darkMode) {
-      this.postRef.nativeElement.style.backgroundColor = _darkColor;
-      this.postContent1.nativeElement.style.backgroundColor = _darkColor;
-      this.postContent2.nativeElement.style.backgroundColor = _darkColor;
-      this.postContent3.nativeElement.style.backgroundColor = _darkColor;
-    } else {
-      this.postRef.nativeElement.style.backgroundColor = this.post.color;
-      this.postContent1.nativeElement.style.backgroundColor = _darkColor;
-      this.postContent2.nativeElement.style.backgroundColor = _darkColor;
-      this.postContent3.nativeElement.style.backgroundColor = _darkColor;
-    }
+    this.postRef.nativeElement.style.backgroundColor = this.post.color!;
   }
 
   triggerUserOptions(): void {

@@ -74,8 +74,19 @@ ul#top-links li {
   display: inline-block;
 }
 
-li:hover a, li:hover div, li:hover div, li:hover {
-  background-color: #e6e6e6;
+li:hover a,
+li:hover div,
+li:hover div,
+li:hover {
+  background-color: #e6e6e6 !important;
+}
+
+.darkmode li:hover a,
+.darkmode li:hover div,
+.darkmode li:hover div,
+.darkmode li:hover {
+  background-color: #505050 !important;
+  color: white !important;
 }
 
 ul#bottom-links {

@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {NotificationData} from "../../NotificationData";
 import {NotificationsService} from "../../services/notifications.service";
 import {map, Observable} from "rxjs";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-notifications-dashboard',
@@ -13,8 +14,9 @@ export class NotificationsDashboardComponent implements OnInit {
 
   isLoaded: boolean = false;
   myNotifsObservable!: Observable<NotificationData[]>;
+  noNotifs: boolean = true;
 
-  constructor(private router: Router, private notificationService: NotificationsService) {
+  constructor(private router: Router, private notificationService: NotificationsService, private userService: UserService) {
     let token = localStorage.getItem('auth-token');
     if (token === null) {
       router.navigateByUrl('/login');
@@ -28,6 +30,11 @@ export class NotificationsDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.myNotifsObservable = this.notificationService.getNotificationsFromUser((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.myNotifsObservable.subscribe(response => {
+      this.isLoaded = true;
+      if (response.length != 0)
+        this.noNotifs = false;
+    });
   }
 
   clearNotifications() {

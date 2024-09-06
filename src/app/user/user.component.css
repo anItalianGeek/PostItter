@@ -6,6 +6,11 @@
   padding: 0;
 }
 
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 .action-button {
   display: none;
   transition: 0.1s;

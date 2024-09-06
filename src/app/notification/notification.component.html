@@ -1,5 +1,5 @@
-<div id="main" (click)="performAction()">
-  <div id="pfp">{{ notification.user.profilePicture }}</div>
+<div id="main" #main>
+  <div id="pfp" (click)="performAction()">{{ notification.user.profilePicture }}</div>
   <p style="font-weight: bold">
     {{ notification.user.username }}
   </p>

@@ -37,21 +37,19 @@ export class CommentComponent {
   }
 
   checkTags(s: string): void {
-    while (true) {
-      let idx = s.indexOf("@");
-      if (idx == -1)
-        return;
-      else {
-        s = s.substring(idx);
-        let possibleUser = s.substring(0, s.indexOf(" "));
-        this.notificationService.addNewTagNotification({
-          id: "",
-          postId: this.post.id,
-          type: "tag",
-          user: this.currentUser
-        }, possibleUser);
-      }
+    const tagRegex = /@([a-zA-Z0-9_]+)/g;
+    let match;
+
+    while ((match = tagRegex.exec(s)) !== null) {
+      const possibleUser = match[1];
+      this.notificationService.addNewTagNotification({
+        id: "",
+        postId: this.post.id,
+        type: "tag",
+        user: this.currentUser
+      }, possibleUser);
     }
   }
+
 
 }

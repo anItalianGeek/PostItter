@@ -15,6 +15,11 @@
 }
 */
 
+.darkmode * {
+  background-color: #3a3a3a;
+  color: white;
+}
+
 #pfp {
   border: 1px solid black;
   border-radius: 50%;

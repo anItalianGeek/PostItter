@@ -1,4 +1,4 @@
-<div id="main" routerLink="/chats/{{chat.chatId}}">
+<div id="main" routerLink="/chats/{{chat.chatId}}" #main>
   <div id="chat-name">{{ chat.chatName }}</div>
   <div *ngIf="chat.lastMessage">{{ chat.lastMessage.sender_username }}: {{ chat.lastMessage.content }}</div>
   <div *ngIf="!chat.lastMessage">Send your first message! Say hi!</div>

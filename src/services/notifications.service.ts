@@ -19,34 +19,55 @@ export class NotificationsService {
   getNotificationsFromUser(id: string): Observable<NotificationData[]> {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    return this.http.get<NotificationData[]>(this.url + '/api/notifications/get/' + id, {headers: headers});
+    return this.http.get<NotificationData[]>(this.url + '/api/notifications/get/' + id);
   }
 
   // POST a new notification
   addNewNotification(notification: NotificationData, user: UserData): void {
     const jwt = localStorage.getItem('auth-token');
+    const params = new HttpParams().set('id_current_user', (JSON.parse(jwt!)).sub);
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/notifications/newTo/' + user.id, notification, {headers: headers});
+    this.http.post(this.url + '/api/notifications/newTo/' + user.id, notification, {params: params}).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
+    });
+
   }
 
   addNewTagNotification(notification: NotificationData, possibleUser: string) {
-    let params = new HttpParams().set('mention', possibleUser);
     const jwt = localStorage.getItem('auth-token');
+    const params = new HttpParams().set('mention', possibleUser);
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/notifications/newTo', notification, {params: params, headers: headers});
+    this.http.post(this.url + '/api/notifications/newTo', notification, {params: params}).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
+    });
+
   }
 
   // DELETE all notifications or specific one
   deleteAllNotifications(id: string): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/notifications/deleteAll/' + id, {headers: headers});
+    this.http.delete(this.url + '/api/notifications/deleteAll/' + id).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
+    });
+
   }
 
   deleteSingleNotification(id: string): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/notifications/delete/' + id, {headers: headers});
+    this.http.delete(this.url + '/api/notifications/delete/' + id).subscribe(response => {
+      console.log('Post added successfully', response);
+    }, error => {
+      console.error('Error adding post', error);
+    });
+
   }
 
   private notificationsAreEqual(n1: NotificationData, n2: NotificationData): boolean {

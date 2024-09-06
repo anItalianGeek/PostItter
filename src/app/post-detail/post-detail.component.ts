@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PostData} from "../../PostData";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PostService} from "../../services/post.service";
@@ -11,22 +11,21 @@ import {map, Observable} from "rxjs";
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
-export class PostDetailComponent implements OnInit, AfterViewInit {
+export class PostDetailComponent implements OnInit, OnDestroy {
 
   postDataObservable!: Observable<PostData>;
   currentUserObservable!: Observable<UserData>;
   currentUser!: UserData;
   currentPost!: PostData;
+  // todo entity, post or comment, find it by looping through user data and using localstorage
   @ViewChild('postref', {static: false}) postRef!: ElementRef<HTMLDivElement>;
-  @ViewChild('postcontent1', {static: false}) postContent1!: ElementRef<HTMLDivElement>;
-  @ViewChild('postcontent2', {static: false}) postContent2!: ElementRef<HTMLDivElement>;
-  @ViewChild('postcontent3', {static: false}) postContent3!: ElementRef<HTMLDivElement>;
   ownedByActiveUser!: boolean;
   userOptionsDropdownShown: boolean = false;
   showSharePanel: boolean = false;
   showCommentPanel: boolean = false;
   showReportPanel: boolean = false;
   isLoaded: boolean = false;
+  @ViewChild('main', {static: false}) main!: ElementRef<HTMLDivElement>;
 
   constructor(private router: Router, private postService: PostService, private userService: UserService, private route: ActivatedRoute) {
     let token = localStorage.getItem('auth-token');
@@ -42,43 +41,27 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.currentUserObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub)
-    this.currentUserObservable.subscribe(user => this.currentUser = user);
 
     this.route.paramMap.subscribe(params => {
       this.postDataObservable = this.postService.getPostById(params.get('id')!)
       this.postDataObservable.subscribe(post => {
-        this.currentPost = post;
+        this.currentUserObservable.subscribe(user => {
+          this.currentUser = user;
+          this.currentPost = post;
+          this.isLoaded = true;
+          this.postRef.nativeElement.style.backgroundColor = this.currentPost.color!;
+          let id: string = (JSON.parse(localStorage.getItem('auth-token')!)).sub;
+          this.ownedByActiveUser = this.currentPost.user.id === id;
+          if (this.currentUser.likedPosts?.find(e => e.id === this.currentPost.id))
+            (document.getElementsByClassName('icon')[0].firstElementChild as HTMLImageElement).src = '/icons/heart-liked.png';
+        });
       })
     });
   }
 
-  ngAfterViewInit() {
-    const jwt = JSON.parse(localStorage.getItem('auth-token')!);
-
-    this.postDataObservable = this.postDataObservable.pipe(
-      map(post => {
-        let color: string[] = post.color.substring(4, post.color.length - 1).split(",");
-        let darkColor: number[] = [0, 0, 0];
-        for (let i = 0; i < 3; i++) {
-          darkColor[i] = Number(color[i]) * 0.85;
-        }
-        let _darkColor = "rgb(" + darkColor[0] + ", " + darkColor[1] + ", " + darkColor[2] + ");";
-
-        if (jwt.darkMode) {
-          this.postRef.nativeElement.style.backgroundColor = _darkColor;
-          this.postContent1.nativeElement.style.backgroundColor = _darkColor;
-          this.postContent2.nativeElement.style.backgroundColor = _darkColor;
-          this.postContent3.nativeElement.style.backgroundColor = _darkColor;
-        } else {
-          this.postRef.nativeElement.style.backgroundColor = post.color;
-          this.postContent1.nativeElement.style.backgroundColor = _darkColor;
-          this.postContent2.nativeElement.style.backgroundColor = _darkColor;
-          this.postContent3.nativeElement.style.backgroundColor = _darkColor;
-        }
-
-        return post;
-      })
-    );
+  ngOnDestroy() {
+    if (localStorage.getItem('new-redirection') != null)
+      localStorage.removeItem('new-redirection');
   }
 
   triggerUserOptions(): void {
