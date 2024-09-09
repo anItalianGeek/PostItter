@@ -54,13 +54,17 @@
       </div>
       <img src="/icons/menu-dots-vertical.svg" alt="" width="24px" id="triggerUserOptions" (click)="showUserOptions()">
     </div>
-    <div id="flex-container-posts">
-      <app-post *ngFor="let post of user.posts" [post]="post" [currentUser]="currentUser"
+    <div id="flex-container-posts" *ngFor="let post of user.posts">
+      <app-post *ngIf="post" [post]="post" [currentUser]="currentUser"
                 (click)="setLastClickedPost(post)" class="post"></app-post>
     </div>
-
-    <div id="show-followers-overlay" *ngIf="showAllFollowers">
-      <div id="followers-modal">
+    <div id="private-profile-banner" *ngIf="privateProfileCheck">
+      <img src="/icons/lock.svg" alt="" width="96px">
+      <span>This profile is private. Follow this user to see it's posts, followers and following.</span>
+    </div>
+    <div class="show-followers-overlay" *ngIf="showAllFollowers"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="followers-modal">
         <div class="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
@@ -73,8 +77,9 @@
       </div>
     </div>
 
-    <div id="show-following-overlay" *ngIf="showAllFollowing">
-      <div id="following-modal">
+    <div class="show-following-overlay" *ngIf="showAllFollowing"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="following-modal">
         <div class="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
@@ -94,7 +99,7 @@
                  [currentUser]="currentUser"></app-comment>
     <app-share *ngIf="showShareWindow" (showShareWindowChange)="closeShareWindow($event)"
                [postToShare]="lastClickedPost"
-               [currentUSer]="currentUser"></app-share>
+               [currentUser]="currentUser"></app-share>
   </main>
 </div>
 <!-- routerLink="posts/{{post.id}}" -->

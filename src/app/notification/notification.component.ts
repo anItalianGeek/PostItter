@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NotificationData} from "../../NotificationData";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-notification',
@@ -12,7 +13,7 @@ export class NotificationComponent implements OnInit {
 
   @Input() notification!: NotificationData;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService, private notificationService: NotificationsService) {
   }
 
   ngOnInit() {
@@ -25,6 +26,9 @@ export class NotificationComponent implements OnInit {
         break;
       case 'request-follow':
         this.notification.message = "requested to follow you.";
+        break;
+      case 'accepted-follow-request':
+        this.notification.message = "accepted your follow request.";
         break;
       case 'new-like':
         this.notification.message = "liked your post.";
@@ -45,24 +49,34 @@ export class NotificationComponent implements OnInit {
         break;
       case 'new-follow':
       case 'request-follow':
+      case 'accepted-follow-request':
         this.router.navigateByUrl('/users/' + this.notification.user.id);
         break;
       case 'new-like':
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         break;
       case 'new-comment':
-        localStorage.setItem('new-redirection', this.notification.postId + '-' + this.notification.user.id);
+        localStorage.setItem('new-comment-redirection', this.notification.postId + '-' + this.notification.user.id);
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         break;
       case 'tag':
-        localStorage.setItem('new-redirection', this.notification.postId + '-' + this.notification.user.id);
+        localStorage.setItem('new-tag-redirection', this.notification.postId + '-' + this.notification.user.id);
         this.router.navigateByUrl('/posts/' + this.notification.postId);
         break;
     }
   }
 
   acceptRequest(): void {
-    this.userService.followUser(this.notification.user.id, (JSON.parse(localStorage.getItem('auth-token')!)).sub, this.notification);
+    if (confirm("Are you sure you want to allow " + this.notification.user.username + " to follow you?")) {
+      const jwt = JSON.parse(localStorage.getItem('auth-token')!);
+      this.userService.followUser(this.notification.user.id, jwt.sub, this.notification);
+      this.notificationService.addNewNotification({
+        id: "",
+        type: 'accepted-follow-request',
+        user: {id: jwt.sub, username: '', displayName: '', profilePicture: ''}
+      }, this.notification.user, true);
+    }
   }
 
+  protected readonly localStorage = localStorage;
 }

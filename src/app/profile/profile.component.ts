@@ -49,6 +49,20 @@ export class ProfileComponent implements OnInit {
     this.searchFilters.nativeElement.getElementsByTagName('li')[this.activatedFilter].classList.remove('selected');
     this.searchFilters.nativeElement.getElementsByTagName('li')[index].classList.add('selected');
     this.activatedFilter = index;
+    switch (index) {
+      case 0:
+        this.userObservable.subscribe(user => this.postsObservable = of(user.likedPosts!));
+        break;
+      case 1:
+        this.userObservable.subscribe(user => this.postsObservable = of(user.commentedPosts!));
+        break;
+      case 2:
+        // reposting not implemented yet!!
+        break;
+      case 3:
+        this.userObservable.subscribe(user => this.postsObservable = of(user.posts!));
+        break;
+    }
   }
 
   showFollowers(): void {
@@ -86,4 +100,6 @@ export class ProfileComponent implements OnInit {
   setLastClickedPost(post: PostData) {
     this.lastClickedPost = post;
   }
+
+  protected readonly localStorage = localStorage;
 }

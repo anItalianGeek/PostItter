@@ -1,9 +1,9 @@
-.darkmode *:not(.post) {
+.darkmode *:not(.post), .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
 
-#create-comment-overlay {
+.create-comment-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   z-index: 1000;
 }
 
-#create-comment {
+.create-comment {
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -29,7 +29,7 @@
   flex-direction: column;
 }
 
-#create-comment textarea {
+.create-comment textarea {
   width: 600px;
   height: 200px;
   border-radius: 15px;

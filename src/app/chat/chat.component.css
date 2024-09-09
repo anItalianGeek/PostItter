@@ -1,28 +1,37 @@
-#main {
-  max-width: 800px;
+.main {
+  max-width: 1000px;
   width: 100%;
-  height: 75px;
+  height: 60px;
   padding: 5px;
   border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
 }
 
-#main * {
+.main * {
   display: inline-block;
   margin: 0 10px;
 }
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
 
-#chat-name {
+.darkmode {
+  border: 1px solid black;
+  border-radius: 25px;
+}
+
+.chat-name {
   font-weight: bold;
 }
 
 img {
   z-index: 500;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 1px solid lightgray;
   float: right;
 }

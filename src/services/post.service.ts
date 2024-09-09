@@ -78,22 +78,13 @@ export class PostService {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
     const params = new HttpParams().set('action', action).append('id_retrieving_user', (JSON.parse(jwt!)).sub);
-    this.http.put(this.url + '/api/posts/update/' + post.id, comment, {params: params}).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
+    this.http.put(this.url + '/api/posts/update/' + post.id, comment, {params: params}).subscribe()
   }
 
   // DELETE the post from the server
   deletePost(post: PostData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/posts/delete/' + post.id).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
-
+    this.http.delete(this.url + '/api/posts/delete/' + post.id).subscribe()
   }
 }

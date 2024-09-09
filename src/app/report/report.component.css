@@ -1,9 +1,9 @@
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
 
-#overlay {
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-#modal {
+.modal {
   background-color: white;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

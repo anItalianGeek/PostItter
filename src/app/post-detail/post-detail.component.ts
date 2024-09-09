@@ -17,7 +17,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   currentUserObservable!: Observable<UserData>;
   currentUser!: UserData;
   currentPost!: PostData;
-  // todo entity, post or comment, find it by looping through user data and using localstorage
   @ViewChild('postref', {static: false}) postRef!: ElementRef<HTMLDivElement>;
   ownedByActiveUser!: boolean;
   userOptionsDropdownShown: boolean = false;
@@ -47,6 +46,23 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.postDataObservable.subscribe(post => {
         this.currentUserObservable.subscribe(user => {
           this.currentUser = user;
+
+          if (localStorage.getItem('new-tag-redirection')) {
+            const userTagRegex = /@([a-zA-Z0-9_]+)/g;
+            const commentsWithSearchString: any = post.comments?.filter(comment => userTagRegex.test(comment.content) && comment.user.id == localStorage.getItem('new-tag-redirection')!.split('-')[1]);
+            const otherComments: any = post.comments?.filter(comment => !userTagRegex.test(comment.content) && comment.user.id == localStorage.getItem('new-tag-redirection')!.split('-')[1]);
+            post.comments = [...otherComments, ...commentsWithSearchString];
+            localStorage.removeItem('new-tag-redirection');
+          }
+
+          if (localStorage.getItem('new-comment-redirection')) {
+            const searchedComments: any = post.comments?.filter(comment => comment.user.id == localStorage.getItem('new-comment-redirection')!.split('-')[1]);
+            const otherComments: any = post.comments?.filter(comment => comment.user.id != localStorage.getItem('new-comment-redirection')!.split('-')[1]);
+            post.comments = [...otherComments, ...searchedComments];
+            searchedComments[0].scrollIntoView({behavior: 'smooth'});
+            localStorage.removeItem('new-comment-redirection');
+          }
+
           this.currentPost = post;
           this.isLoaded = true;
           this.postRef.nativeElement.style.backgroundColor = this.currentPost.color!;

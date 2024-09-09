@@ -1,4 +1,4 @@
-<div id="main" #main>
+<div class="main" #main>
   <nav>
     <app-navigation-side-bar></app-navigation-side-bar>
   </nav>
@@ -10,21 +10,24 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="isLoaded">
-    <app-chat *ngFor="let chat of userChats | async" [chat]="chat"></app-chat>
+    <app-chat *ngFor="let chat of userChats | async" [chat]="chat" style="margin: 8px 0"></app-chat>
   </main>
   <div id="new-chat" (click)="startChat()">
     <img src="/icons/at.svg" alt="" width="20%">
     <span>Start A New Chat</span>
   </div>
-  <div id="start-chat-overlay" *ngIf="showPossibleChatters">
-    <div id="start-chat-modal">
-      <div id="close-image">
+  <div class="start-chat-overlay" *ngIf="showPossibleChatters"
+       [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+    <div class="start-chat-modal">
+      <div id="close-image" style="height: 40px">
         <div style="float: right">
           <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;" (click)="stopChatCreation()">
         </div>
       </div>
-      <app-user *ngFor="let chatter of possibleChatters | async" [user]="chatter"
-                (click)="createChat(chatter)"></app-user>
+      <div>
+        <app-user *ngFor="let chatter of possibleChatters | async" [user]="chatter"
+                  (click)="createChat(chatter)"></app-user>
+      </div>
     </div>
   </div>
 </div>

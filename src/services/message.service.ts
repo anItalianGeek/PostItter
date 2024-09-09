@@ -15,7 +15,7 @@ export class MessageService {
   constructor(private http: HttpClient, private notificationService: NotificationsService) {
   }
 
-  getAllChats(id: string): Observable<Chat[]> {
+  getAllChats(): Observable<Chat[]> {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
     const params = new HttpParams().set('user_id', (JSON.parse(jwt!)).sub);
@@ -43,24 +43,31 @@ export class MessageService {
     return this.http.post<Chat>(this.url + 'api/messanger/createChat', {}, {params: params});
   }
 
-  sendMessage(chat: Chat, message: Message) {
+  sendMessage(chat: Chat, message: Message): void {
     const jwt = JSON.parse(localStorage.getItem('auth-token')!);
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('auth-token')});
-    const params = new HttpParams().set('id_current_user', (JSON.parse(jwt!)).sub);
-    chat.members.forEach(e => this.notificationService.addNewNotification({
-      id: "",
-      type: "new-message",
-      postId: chat.chatId,
-      user: {id: jwt.sub, displayName: jwt.displayName, username: jwt.username, profilePicture: ""},
-    }, e));
-    return this.http.post(this.url + 'api/messanger/chat/' + chat.chatId, message, {params: params});
+    const params = new HttpParams().set('id_current_user', jwt.sub);
+    chat.members.forEach(e => {
+      this.notificationService.addNewNotification({
+        id: "",
+        type: "new-message",
+        postId: chat.chatId,
+        user: {
+          id: jwt.sub,
+          displayName: jwt.displayname,
+          username: jwt.username,
+          profilePicture: ""
+        },
+      }, e, true);
+    });
+    this.http.post(this.url + 'api/messanger/chat/' + chat.chatId, message, {params: params}).subscribe()
   }
 
   deleteChat(chatId: string): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
     const params = new HttpParams().set('id_current_user', (JSON.parse(jwt!)).sub);
-    this.http.delete(this.url + 'api/messanger/chat/' + chatId, {params: params});
+    this.http.delete(this.url + 'api/messanger/chat/' + chatId, {params: params}).subscribe();
   }
 
 }

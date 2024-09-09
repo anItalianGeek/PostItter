@@ -56,7 +56,7 @@ export class PostComponent implements OnInit, AfterViewInit {
         user: this.currentUser,
         postId: this.post.id,
         type: "new-like"
-      }, this.post.user);
+      }, this.post.user, true);
       target.src = '/icons/heart-liked.png';
     } else {
       this.currentUser.likedPosts = this.currentUser.likedPosts?.filter(post => post.id !== this.post.id);
@@ -97,4 +97,5 @@ export class PostComponent implements OnInit, AfterViewInit {
     }
   }
 
+  protected readonly localStorage = localStorage;
 }

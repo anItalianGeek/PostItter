@@ -10,19 +10,19 @@
     <app-loader></app-loader>
   </main>
   <main *ngIf="isLoaded">
-    <div id="button-container">
+    <div id="button-container" [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
       <div class="button" (click)="clearNotifications()">Clear Notifications</div>
     </div>
     <div id="notifs-container">
-      <div>
-        <app-notification *ngFor="let notification of myNotifsObservable | async"
-                          [notification]="notification"
-                          (click)="clearSingleNotification(notification.id)"></app-notification>
+      <div *ngFor="let notification of myNotifsObservable | async" style="display: flex; align-items: center">
+        <app-notification [notification]="notification" style="display: inline-block"></app-notification>
+        <div style="display: inline-block;" (click)="clearSingleNotification(notification.id)">
+          <img src="/icons/trash.png" alt="" width="36px" style="border: 1px solid lightgray; border-radius: 12px">
+        </div>
       </div>
     </div>
     <div *ngIf="noNotifs" style="display: flex; align-items: center; justify-content: center;">No notifications</div>
-    <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0"><small><i>Click on the pfp
-      to take action,
-      click somewhere else to delete the notification.</i></small></div>
+    <div style="margin-top: 12px; display: grid; place-content: center"><small>Click on the user's pfp to take
+      action.</small></div>
   </main>
 </div>

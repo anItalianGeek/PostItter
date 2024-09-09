@@ -31,7 +31,7 @@ export class MessagesDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userChats = this.messageService.getAllChats((JSON.parse(localStorage.getItem('auth-token')!)).sub);
+    this.userChats = this.messageService.getAllChats();
 
     this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub).subscribe(user => {
       this.possibleChatters = of(user.following!);
@@ -59,5 +59,5 @@ export class MessagesDashboardComponent implements OnInit {
     this.showPossibleChatters = false;
   }
 
-  protected readonly stop = stop;
+  protected readonly localStorage = localStorage;
 }

@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {HomepageComponent} from './homepage/homepage.component';
 import {NavigationSideBarComponent} from './navigation-side-bar/navigation-side-bar.component';
 import {PostComponent} from './post/post.component';
-import {NgOptimizedImage} from "@angular/common";
+import {DatePipe, NgOptimizedImage} from "@angular/common";
 import {NotificationsDashboardComponent} from './notifications-dashboard/notifications-dashboard.component';
 import {SearchPageComponent} from './search-page/search-page.component';
 import {MessagesDashboardComponent} from './messages-dashboard/messages-dashboard.component';
@@ -24,9 +24,9 @@ import {LoaderComponent} from './loader/loader.component';
 import {CommentComponent} from './comment/comment.component';
 import {ReportComponent} from './report/report.component';
 import {FormsModule} from "@angular/forms";
-import { ShareComponent } from './share/share.component';
-import { ChatComponent } from './chat/chat.component';
-import { ChatDetailComponent } from './chat-detail/chat-detail.component';
+import {ShareComponent} from './share/share.component';
+import {ChatComponent} from './chat/chat.component';
+import {ChatDetailComponent} from './chat-detail/chat-detail.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +60,7 @@ import { ChatDetailComponent } from './chat-detail/chat-detail.component';
     NgOptimizedImage,
     FormsModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

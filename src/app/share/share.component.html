@@ -1,13 +1,13 @@
-<div id="share-overlay" #main>
-  <div id="share-modal">
+<div class="share-overlay" #main [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div class="share-modal">
     <div id="close-image">
       <div style="float: right; margin: 5px;">
         <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;" (click)="closeShareMenu()">
       </div>
     </div>
-    <app-post [post]="postToShare" [currentUser]="currentUSer" class="post"></app-post>
+    <app-post [post]="postToShare" [currentUser]="currentUser" class="post"></app-post>
     <h3>Share Post With...</h3>
-    <div id="users">
+    <div class="users">
       <app-user *ngFor="let user of possibleUsers" [user]="user" (click)="share(user)"></app-user>
     </div>
   </div>

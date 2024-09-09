@@ -5,7 +5,7 @@
   padding: 0;
 }
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
@@ -37,7 +37,7 @@ header img {
   align-items: center;
 }
 
-#flex-container-posts {
+.flex-container-posts {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,7 +93,7 @@ header img {
   background-color: #e0e0e0;
 }
 
-#show-followers-overlay, #show-following-overlay {
+.show-followers-overlay, .show-following-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -106,7 +106,7 @@ header img {
   z-index: 1000;
 }
 
-#followers-modal, #following-modal {
+.followers-modal, .following-modal {
   background: white;
   padding: 20px;
   border-radius: 8px;

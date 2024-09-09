@@ -1,11 +1,11 @@
-#main {
+.main {
   display: flex;
   align-items: center;
   flex-direction: row;
   background-color: whitesmoke;
   border-radius: 20px;
-  min-width: 500px;
-  max-width: 500px;
+  min-width: 600px;
+  max-width: 600px;
   margin: 5px 10px;
 }
 
@@ -15,9 +15,14 @@
 }
 */
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
+}
+
+.darkmode {
+  border: 1px solid black;
+  border-radius: 25px;
 }
 
 #pfp {
@@ -25,6 +30,7 @@
   border-radius: 50%;
   width: 48px;
   height: 48px;
+  margin: 2px;
 }
 
 p {
@@ -32,11 +38,16 @@ p {
 }
 
 button {
-  width: 100px;
+  width: 70px;
   height: 35px;
   margin: 10px;
   border-width: 3px;
   border-style: solid;
   border-radius: 25px;
   transition: 0.3s;
+}
+
+#buttons {
+  display: flex;
+  flex-direction: row;
 }

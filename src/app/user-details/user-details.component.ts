@@ -28,6 +28,7 @@ export class UserDetailsComponent implements OnInit {
   userObservable!: Observable<UserData>;
   userFollowers!: Observable<UserData[]>;
   userFollowing!: Observable<UserData[]>;
+  privateProfileCheck: boolean = true;
 
   constructor(private router: Router, private messageService: MessageService, private userService: UserService, private notificationService: NotificationsService, private route: ActivatedRoute) {
     let token = localStorage.getItem('auth-token');
@@ -49,6 +50,10 @@ export class UserDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userObservable.subscribe(user => {
+      if (user.privateProfile != null && !user.privateProfile)
+        this.privateProfileCheck = false;
+    })
     this.currentUserObservable.subscribe(user => this.currentUser = user);
     this.isLoaded = true; // useless?
   }
@@ -63,7 +68,7 @@ export class UserDetailsComponent implements OnInit {
 
   follow(): void {
     this.userObservable.subscribe(user => {
-      if (!user.privateProfile) {
+      if (user.privateProfile != null && !user.privateProfile) {
         if (this.currentUser.following)
           this.currentUser.following?.push(user);
         else
@@ -75,14 +80,13 @@ export class UserDetailsComponent implements OnInit {
           id: "",
           type: "new-follow",
           user: this.currentUser
-        }, user);
+        }, user, true);
       } else {
         this.notificationService.addNewNotification({
           id: "",
           type: "request-follow",
           user: this.currentUser
         }, user);
-        alert("Follow request has been sent!");
       }
     });
   }
@@ -119,7 +123,6 @@ export class UserDetailsComponent implements OnInit {
 
   report(): void {
     this.showReportWindow = true;
-    // TODO must implement some sort of storage to receive reports
   }
 
   closeReportWindow(event: any): void {

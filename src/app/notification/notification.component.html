@@ -1,11 +1,12 @@
-<div id="main" #main>
-  <div id="pfp" (click)="performAction()">{{ notification.user.profilePicture }}</div>
+<div class="main" #main [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div id="pfp" (click)="performAction()"><img src="{{notification.user.profilePicture}}" alt="" width="48px"
+                                               style="border-radius: 50%;"></div>
   <p style="font-weight: bold">
     {{ notification.user.username }}
   </p>
   <p>{{ notification.message }}</p>
-  <div *ngIf="notification.type == 'request-follow'">
+  <div *ngIf="notification.type == 'request-follow'" id="buttons">
     <button style="background-color: lightcoral">Reject</button>
-    <button style="background-color: lightgreen; z-index: 500;" (click)="acceptRequest()">Accept</button>
+    <button style="background-color: lightgreen; z-index: 2000;" (click)="acceptRequest()">Accept</button>
   </div>
 </div>

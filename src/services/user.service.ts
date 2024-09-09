@@ -42,44 +42,26 @@ export class UserService {
   blockUser(id: string, userData: UserData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/users/' + id + '/block/' + userData.id, {}).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
+    this.http.post(this.url + '/api/users/' + id + '/block/' + userData.id, {}).subscribe()
 
   }
 
   unblockUser(id: string, userData: UserData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/users/' + id + '/unblock/' + userData.id, {}).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
+    this.http.post(this.url + '/api/users/' + id + '/unblock/' + userData.id, {}).subscribe()
   }
 
   followUser(id: string, followerId: string, notification?: NotificationData): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/users/' + id + '/follow/' + followerId, notification).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
-
+    this.http.post(this.url + '/api/users/' + id + '/follow/' + followerId, notification).subscribe()
   }
 
   unfollowUser(id: string, followerId: string): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/users/' + id + '/unfollow/' + followerId).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
-
+    this.http.delete(this.url + '/api/users/' + id + '/unfollow/' + followerId).subscribe()
   }
 
   // PUT updated values for a user
@@ -103,33 +85,20 @@ export class UserService {
   updatePassword(newPassword: string) {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.post(this.url + '/api/users/changePassword', newPassword).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
+    this.http.post(this.url + '/api/users/changePassword', newPassword).subscribe()
   }
 
   // DELETE a user from the server
   deleteUser(id: string): void {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/users/' + id).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
+    this.http.delete(this.url + '/api/users/' + id).subscribe()
   }
 
   removeTwoFA(): void {
     let token = JSON.parse(localStorage.getItem('auth-token')!);
     let params = new HttpParams().set('id_active_user', token.sub);
     let headers = new HttpHeaders({'Authorization': 'Bearer ' + token});
-    this.http.delete(this.url + '/api/2fa', {params: params}).subscribe(response => {
-      console.log('Post added successfully', response);
-    }, error => {
-      console.error('Error adding post', error);
-    });
-
+    this.http.delete(this.url + '/api/2fa', {params: params}).subscribe()
   }
 }

@@ -18,19 +18,19 @@
     </div>
     <div id="grid-container">
       <div class="input-element" style="width: 50%">
-        <input type="text" name="first-name" id="_first-name" placeholder="Your First Name" required>
+        <input type="text" name="first-name" id="_first-name" placeholder="Your First Name" required #firstName>
       </div>
       <div class="input-element" style="width: 50%">
-        <input type="text" name="last-name" id="_last-name" placeholder="Your Last Name" required>
+        <input type="text" name="last-name" id="_last-name" placeholder="Your Last Name" required #lastName>
       </div>
       <div class="input-element" style="width: 100%">
-        <input type="number" name="number" id="_number" placeholder="Your phone number" required>
+        <input type="number" name="number" id="_number" placeholder="Your phone number" required #number>
       </div>
       <div class="input-element" style="width: 100%">
-        <input type="text" name="email" id="_email" placeholder="Your Email" required>
+        <input type="text" name="email" id="_email" placeholder="Your Email" required #email>
       </div>
       <div class="input-element" style="width: 100%">
-        <textarea placeholder="Your message" required></textarea>
+        <textarea placeholder="Your message" required #content></textarea>
       </div>
       <div id="submit" (click)="sendMessage()">Send Message</div>
     </div>

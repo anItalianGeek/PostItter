@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {UserService} from "../../services/user.service";
 import {UserData} from "../../UserData";
+import {ReportService} from "../../services/report.service";
 
 @Component({
   selector: 'app-report',
@@ -14,14 +14,14 @@ export class ReportComponent {
   @ViewChild('explanation', {static: false}) explanation!: ElementRef<HTMLTextAreaElement>;
   selectedOption: string = '';
 
-  constructor(private userService: UserService) {
+  constructor(private reportService: ReportService) {
   }
 
   submitReport(): void {
     let explanation: string = this.explanation.nativeElement.value;
     let reason: string = this.selectedOption;
     if (confirm("You are about to report a user, are you sure you want to do this?")) {
-      // TODO send the report
+      this.reportService.sendReport(this.reportedUser, reason, explanation);
       this.showReportWindowChange.emit(false);
     }
   }
@@ -29,4 +29,6 @@ export class ReportComponent {
   cancelReport(): void {
     this.showReportWindowChange.emit(false);
   }
+
+  protected readonly localStorage = localStorage;
 }

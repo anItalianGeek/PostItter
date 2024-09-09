@@ -21,9 +21,9 @@
     <span>Create a Post</span>
   </div>
 
-  <div id="create-post-overlay" *ngIf="createPostProcedure"
+  <div class="create-post-overlay" *ngIf="createPostProcedure"
        [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
-    <div id="create-post">
+    <div class="create-post">
       <h3>What is your new post going to be about... ?</h3>
       <textarea id="post-content" maxlength="320" #content></textarea>
       <h4>Add hashtags <i>(words only separated by whitespaces!)</i></h4>
@@ -99,11 +99,14 @@
   </div>
 
   <app-report *ngIf="showReportWindow" (showReportWindowChange)="closeReportWindow($event)"
-              [reportedUser]="lastClickedPost.user"></app-report>
+              [reportedUser]="lastClickedPost.user"
+              [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''"></app-report>
   <app-comment *ngIf="showCommentWindow" (showCommentWindowChange)="closeCommentWindow($event)" [post]="lastClickedPost"
-               [currentUser]="currentUser"></app-comment>
+               [currentUser]="currentUser"
+               [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''"></app-comment>
   <app-share *ngIf="showShareWindow" (showShareWindowChange)="closeShareWindow($event)" [postToShare]="lastClickedPost"
-             [currentUSer]="currentUser"></app-share>
+             [currentUser]="currentUser"
+             [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''"></app-share>
 
 </div>
 <!-- routerLink="posts/{{post.id}}" -->

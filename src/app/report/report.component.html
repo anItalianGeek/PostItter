@@ -1,5 +1,5 @@
-<div id="overlay" #main>
-  <div id="modal">
+<div class="overlay" #main [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div class="modal">
     <h2>Why are you reporting this user?</h2>
     <select id="report-reason" [(ngModel)]="selectedOption" #reason>
       <option value="" selected>Select a reason</option>

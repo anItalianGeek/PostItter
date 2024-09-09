@@ -28,9 +28,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(private loginService: LoginService, private router: Router) {
     this.userInputs.pipe(
       debounceTime(400),
-      switchMap(content => this.loginService.checkDataAvailability(this.username.nativeElement.value, this.email_signup.nativeElement.value))
+      switchMap(_ => this.loginService.checkDataAvailability(this.username.nativeElement.value, this.email_signup.nativeElement.value))
     ).subscribe(response => {
-      console.log(response)
       this.usernameAvailable = response[0];
       this.emailAvailable = response[1];
     });

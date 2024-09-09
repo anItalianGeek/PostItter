@@ -1,4 +1,4 @@
-<div id="post" #postref>
+<div id="post" #postref [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode': ''">
   <div id="user">
     <div id="pfp" routerLink="/users/{{post.user.id}}"><img src="{{post.user.profilePicture}}"></div>
     <p id="name" routerLink="/posts/{{post.id}}"><span style="font-weight: bold">

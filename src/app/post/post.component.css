@@ -5,6 +5,10 @@
   padding: 0;
 }
 
+.darkmode {
+  color: black;
+}
+
 ul {
   list-style-type: none;
 }

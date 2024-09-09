@@ -19,8 +19,8 @@ export class LoginService {
   }
 
   logInWith2faCode(code: string): Observable<JwtWebToken> {
-    let params = new HttpParams().set('email_active_user', localStorage.getItem('temp-email')!);
-    return this.http.post<JwtWebToken>(this.url + '/api/2fa/authenticate', code, {params: params});
+    let params = new HttpParams().set('email_active_user', localStorage.getItem('temp-email')!).append('code', code);
+    return this.http.post<JwtWebToken>(this.url + '/api/2fa/authenticate', {}, {params: params});
   }
 
   checkIf2faIsActive(payload: LoginUserInput): Observable<boolean> {
@@ -37,7 +37,7 @@ export class LoginService {
   logOut() {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    this.http.delete(this.url + '/api/authguard/logout');
+    this.http.delete(this.url + '/api/authguard/logout/' + (JSON.parse(jwt!)).sub).subscribe();
     localStorage.removeItem('auth-token');
     this.router.navigateByUrl('/login');
   }
@@ -49,7 +49,7 @@ export class LoginService {
   }
 
   requestPasswordRecovery(recoveryEmail: string) {
-    this.http.post(this.url + '/api/PasswordRecovery/requestChange', recoveryEmail);
+    this.http.post(this.url + '/api/PasswordRecovery/requestChange', recoveryEmail).subscribe();
   }
 }
 

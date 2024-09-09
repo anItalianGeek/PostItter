@@ -58,4 +58,5 @@ export class NotificationsDashboardComponent implements OnInit {
   }
 
 
+  protected readonly localStorage = localStorage;
 }

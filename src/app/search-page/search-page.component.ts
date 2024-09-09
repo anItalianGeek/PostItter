@@ -52,10 +52,9 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   }
 
   changeFilter(index: number): void {
-    this.searchFilters.nativeElement.getElementsByTagName('li')[this.activatedFilter].classList.remove('selected');
-    this.searchFilters.nativeElement.getElementsByTagName('li')[index].classList.add('selected');
     this.activatedFilter = index;
   }
+
 
   pushTerm() {
     this.searchKeywords.next(this.searchBar.nativeElement.value);
@@ -90,4 +89,5 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
     return (item as PostData).body !== undefined;
   }
 
+  protected readonly localStorage = localStorage;
 }

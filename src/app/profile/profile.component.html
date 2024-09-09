@@ -43,18 +43,19 @@
           <li class="inline-blk" (click)="changeFilter(0)">Likes</li>
           <li class="inline-blk" (click)="changeFilter(1)">Comments</li>
           <li class="inline-blk" (click)="changeFilter(2)">Reposts</li>
-          <li class="inline-blk selected" (click)="changeFilter(3)">None</li>
+          <li class="inline-blk selected" (click)="changeFilter(3)">Owned Posts</li>
         </ul>
       </div>
     </div>
-    <div id="flex-container-posts">
+    <div class="flex-container-posts">
       <app-post *ngFor="let post of postsObservable | async" [post]="post" [currentUser]="user"
                 (commentWindow)="showCommentingWindow($event)" (shareWindow)="showSharingWindow($event)"
                 (click)="setLastClickedPost(post)" class="post"></app-post>
     </div>
 
-    <div id="show-followers-overlay" *ngIf="showAllFollowers">
-      <div id="followers-modal">
+    <div class="show-followers-overlay" *ngIf="showAllFollowers"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="followers-modal">
         <div class="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
@@ -67,8 +68,9 @@
       </div>
     </div>
 
-    <div id="show-following-overlay" *ngIf="showAllFollowing">
-      <div id="following-modal">
+    <div class="show-following-overlay" *ngIf="showAllFollowing"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="following-modal">
         <div class="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
@@ -86,7 +88,7 @@
                  [currentUser]="user"></app-comment>
     <app-share *ngIf="showShareWindow" (showShareWindowChange)="closeSharingWindow($event)"
                [postToShare]="lastClickedPost"
-               [currentUSer]="user"></app-share>
+               [currentUser]="user"></app-share>
 
   </main>
 </div>

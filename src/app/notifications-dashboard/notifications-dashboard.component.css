@@ -5,9 +5,13 @@
   padding: 0;
 }
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
+}
+
+.darkmode *:hover {
+  background-color: #5a5a5a;
 }
 
 #main {
@@ -58,4 +62,6 @@ header img {
 #notifs-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }

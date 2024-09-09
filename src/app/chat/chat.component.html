@@ -1,6 +1,8 @@
-<div id="main" routerLink="/chats/{{chat.chatId}}" #main>
-  <div id="chat-name">{{ chat.chatName }}</div>
+<div class="main" routerLink="/chats/{{chat.chatId}}" #main
+     [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div class="chat-name">{{ chat.chatName }}</div>
   <div *ngIf="chat.lastMessage">{{ chat.lastMessage.sender_username }}: {{ chat.lastMessage.content }}</div>
   <div *ngIf="!chat.lastMessage">Send your first message! Say hi!</div>
-  <img id="delete-chat-button" src="/icons/trash.png" alt="" (click)="deleteChat(chat.chatId)">
+  <img class="delete-chat-button" src="/icons/trash.png" alt="" (click)="deleteChat(chat.chatId, $event)" width="32px"
+       style="z-index: 300;">
 </div>

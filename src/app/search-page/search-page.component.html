@@ -14,13 +14,13 @@
                (keyup)="pushTerm()">
       </div>
     </div>
-    <div id="filters" #filters>
+    <div class="filters" #filters [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
       <div>Filter by:</div>
       <ul>
-        <li (click)="changeFilter(0)">Users</li>
-        <li (click)="changeFilter(1)">Posts</li>
-        <li (click)="changeFilter(2)">Hashtags</li>
-        <li (click)="changeFilter(3)" class="selected">Anything</li> <!-- by default there are no filters applied -->
+        <li (click)="changeFilter(0)" [ngClass]="activatedFilter === 0 ? 'selected' : ''">Users</li>
+        <li (click)="changeFilter(1)" [ngClass]="activatedFilter === 1 ? 'selected' : ''">Posts</li>
+        <li (click)="changeFilter(2)" [ngClass]="activatedFilter === 2 ? 'selected' : ''">Hashtags</li>
+        <li (click)="changeFilter(3)" [ngClass]="activatedFilter === 3 ? 'selected' : ''">Anything</li>
       </ul>
     </div>
   </main>
@@ -30,5 +30,4 @@
       <app-post *ngIf="isPostData(item)" [currentUser]="currentUser" [post]="item" class="post"></app-post>
     </ng-container>
   </article>
-
 </div>

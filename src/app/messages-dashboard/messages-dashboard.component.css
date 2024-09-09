@@ -5,12 +5,12 @@
   padding: 0;
 }
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
 
-#main {
+.main {
   position: relative;
   left: 22%;
   max-width: 78%;
@@ -56,7 +56,7 @@ main {
   margin: 2px 4px;
 }
 
-#start-chat-overlay {
+.start-chat-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -69,12 +69,12 @@ main {
   align-items: center;
 }
 
-#start-chat-modal {
+.start-chat-modal {
   background-color: white;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   border-radius: 8px;
-  width: 300px;
+  width: 650px;
   z-index: 1001;
 }

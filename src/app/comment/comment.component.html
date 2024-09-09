@@ -1,5 +1,5 @@
-<div id="create-comment-overlay" #main>
-  <div id="create-comment">
+<div class="create-comment-overlay" #main [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div class="create-comment">
     <div *ngIf="post">
       <app-post [post]="post" [currentUser]="currentUser" class="post"></app-post>
     </div>

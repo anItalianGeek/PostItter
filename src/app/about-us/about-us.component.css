@@ -12,6 +12,16 @@
   height: 100%;
 }
 
+main {
+  display: flex;
+  justify-content: center;
+}
+
+main > div {
+  width: 50%;
+  font-size: large;
+}
+
 header {
   display: grid;
   place-items: center;

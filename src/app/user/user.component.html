@@ -1,5 +1,5 @@
-<div id="main" #main>
-  <div id="pfp">{{ user.profilePicture }}</div>
+<div id="main" #main [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+  <div id="pfp"><img src="{{user.profilePicture}}" alt="" width="64px" style="border-radius: 50%;"></div>
   <p id="name"><span style="font-weight: bold">
       {{ user.displayName }}</span><br>{{ user.username }}
   </p>

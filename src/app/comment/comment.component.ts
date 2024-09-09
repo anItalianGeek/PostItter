@@ -32,7 +32,7 @@ export class CommentComponent {
       postId: this.post.id,
       type: "new-comment",
       user: this.currentUser
-    }, this.post.user);
+    }, this.post.user, true);
     this.showCommentWindowChange.emit(false);
   }
 
@@ -52,4 +52,5 @@ export class CommentComponent {
   }
 
 
+  protected readonly localStorage = localStorage;
 }

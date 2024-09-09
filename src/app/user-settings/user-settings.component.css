@@ -5,7 +5,7 @@
   padding: 0;
 }
 
-.darkmode * {
+.darkmode *, .darkmode {
   background-color: #3a3a3a;
   color: white;
 }
@@ -68,7 +68,7 @@ button {
   transition: 0.3s;
 }
 
-#save-changes-overlay {
+.save-changes-overlay {
   position: fixed;
   transform: translateX(-200px);
   display: flex;
@@ -78,15 +78,16 @@ button {
   opacity: 0;
   width: 100%;
   height: 40px;
+  background: rgba(0, 0, 0, 0);
   animation-name: saveChangesPopup;
   animation-duration: 1s;
   transition-timing-function: ease-in-out;
   animation-fill-mode: forwards;
 }
 
-#save-changes {
+.save-changes {
   background-color: #f0f0f0;
-  border-style: hidden;
+  border: 1px solid black;
   border-radius: 25px;
   z-index: 101;
   padding: 10px 15px;
@@ -103,7 +104,7 @@ button {
   }
 }
 
-#delete-account-prompt-overlay, #blocked-users-overlay {
+.delete-account-prompt-overlay, .blocked-users-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -116,7 +117,7 @@ button {
   z-index: 1000;
 }
 
-#modal, #blocked-users-modal {
+.modal, .blocked-users-modal {
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -130,7 +131,7 @@ button {
   gap: 15px;
 }
 
-#blocked-users-modal {
+.blocked-users-modal {
   max-width: 650px;
 }
 

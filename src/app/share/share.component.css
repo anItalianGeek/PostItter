@@ -1,9 +1,9 @@
-.darkmode *:not(.post) {
-  background-color: #3a3a3a;
+.darkmode *:not(.post), .darkmode {
+  background-color: #3a3a3a !important;
   color: white;
 }
 
-#share-overlay {
+.share-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   z-index: 1000;
 }
 
-#share-modal {
+.share-modal {
   background: #f0f0f0;
   padding: 20px;
   border-radius: 8px;
@@ -29,7 +29,7 @@
   flex-direction: column;
 }
 
-#users {
+.users {
   display: flex;
   flex-direction: column;
   justify-content: center;

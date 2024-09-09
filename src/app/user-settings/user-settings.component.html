@@ -217,8 +217,9 @@
       <button class="delete-account" (click)="deleteAccount()">Delete Account</button>
     </div>
 
-    <div *ngIf="showBlockedUsers" id="blocked-users-overlay">
-      <div id="blocked-users-modal">
+    <div *ngIf="showBlockedUsers" class="blocked-users-overlay"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="blocked-users-modal">
         <div id="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;"
@@ -235,8 +236,9 @@
       </div>
     </div>
 
-    <div id="delete-account-prompt-overlay" *ngIf="accountDeletionProcess">
-      <div id="modal">
+    <div class="delete-account-prompt-overlay" *ngIf="accountDeletionProcess"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="modal">
         <h2>Are you really sure you want to delete your account?</h2>
         <h4>If so, please write down in the input field the following text: {{ deletionMessage }}</h4>
         <input type="text" #deletionMessageInput>
@@ -245,8 +247,9 @@
       </div>
     </div>
 
-    <div id="save-changes-overlay" *ngIf="changesWereMade">
-      <div id="save-changes">
+    <div class="save-changes-overlay" *ngIf="changesWereMade"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="save-changes">
         <span style="display: inline-block;"><b>You have unsaved changes!</b></span>
         <button id="revert" (click)="revertChanges()">Revert Settings</button>
         <button id="save" (click)="saveChanges()">Save Changes</button>

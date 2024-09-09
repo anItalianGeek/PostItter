@@ -10,4 +10,5 @@ export class UserComponent {
 
   @Input() user!: UserData;
 
+  protected readonly localStorage = localStorage;
 }

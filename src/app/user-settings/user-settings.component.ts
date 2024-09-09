@@ -233,7 +233,8 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   removeTwoFA(): void {
-    this.userService.removeTwoFA();
+    if (confirm("Are you really sure you want to completely remove Two Factor Authentication? (This will remove your personal secret key)"))
+      this.userService.removeTwoFA();
   }
 
   deleteAccount(): void {
@@ -261,4 +262,6 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
     this.deletionMessage = "";
     this.accountDeletionProcess = false;
   }
+
+  protected readonly localStorage = localStorage;
 }

@@ -7,9 +7,13 @@
          height="100px">
   </header>
   <main>
-    <div *ngFor="let message of chatMessages" id="message-list">
-      <div style="font-weight: bold;">{{ message.sender_username }} <small>{{ message.sent_at }}</small></div>
-      <div>
+    <div *ngFor="let message of chatMessages"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode message-list' : 'message-list'">
+      <div style="font-weight: bold;">
+        <span style="font-size: larger; margin-right: 10px;">{{ message.sender_username }}</span>
+        <small style="color: gray">{{ getFormattedDate(message.sent_at) }}</small>
+      </div>
+      <div style="margin-top: 7px">
         <div>{{ message.content }}</div>
         <div *ngIf="message.file_url == message.content" style="display: inline-block"
              (click)="viewAttachment(message.file_url!)">
@@ -17,21 +21,16 @@
         </div>
       </div>
     </div>
-    <div #endOfChat style="height: 5px"></div>
-    <div id="input">
-      <input type="file" name="file-picker" id="file-picker" style="display: none" #filePicker>
-      <button id="upload" (click)="filePicker.click()"></button>
-      <input type="text" placeholder="Type your message here..." #messageInput>
-      <button id="send" (click)="sendMessage(messageInput.value, filePicker.files)"></button>
-    </div>
+    <div #endOfChat style="height: 5px" id="endOfChat"></div>
 
-    <div id="add-users-to-chat" (click)="startChat()">
-      <span><img src="/icons/add.svg" alt="" width="20%"></span>
+    <div class="add-users-to-chat" (click)="startChat()">
+      <img src="/icons/add.svg" alt="" width="20%">
       <span>Add Members</span>
     </div>
 
-    <div id="start-chat-overlay" *ngIf="showPossibleChatters">
-      <div id="start-chat-modal">
+    <div class="start-chat-overlay" *ngIf="showPossibleChatters"
+         [ngClass]="localStorage.getItem('app-theme') == 'dark' ? 'darkmode' : ''">
+      <div class="start-chat-modal">
         <div id="close-image">
           <div style="float: right">
             <img src="/icons/cross.svg" alt="" width="32px" style="border-radius: 50%;" (click)="stopChatCreation()">
@@ -43,3 +42,20 @@
     </div>
   </main>
 </div>
+
+<div id="input-container" class="fixed-input-container" style="border: 1px solid white">
+  <input type="file" name="file-picker" id="file-picker" style="display: none" #filePicker>
+  <button id="upload" (click)="filePicker.click()" style="border: 1px solid white; height: 40px; border-radius: 20px">
+    <img src="/icons/upload.svg" alt="" width="22px">
+  </button>
+  <input type="text" placeholder="Type your message here..." #messageInput id="message-input"
+         style="border: 1px solid white">
+  <button id="send" (click)="sendMessage(messageInput.value, filePicker.files)"
+          style="border: 1px solid white; height: 40px; border-radius: 20px">
+    <div style="display: flex; justify-content: center; align-items: center">
+      <img src="/icons/paper-plane.svg" alt="" width="22px">
+      <span style="margin-left: 5px">Send</span>
+    </div>
+  </button>
+</div>
+

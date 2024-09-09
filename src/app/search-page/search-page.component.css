@@ -1,13 +1,9 @@
+/* Stili comuni */
 * {
   font-family: "Manrope", sans-serif;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-.darkmode *:not(.post) {
-  background-color: #3a3a3a;
-  color: white;
 }
 
 #main {
@@ -53,7 +49,7 @@ header img {
   transition: 0.4s;
 }
 
-.search-icon ~ #searchBar:focus { /* why ze fugg is not the icon sharp lame ass mf */
+.search-icon ~ #searchBar:focus {
   opacity: 1;
 }
 
@@ -66,21 +62,21 @@ header img {
   padding: 0 10px 0 40px;
 }
 
-#filters {
+.filters {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#filters ul {
+.filters ul {
   list-style-type: none;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#filters ul li, #filters div {
-  border-style: hidden;
+.filters ul li, .filters div {
+  border: 1px solid transparent;
   border-radius: 10px;
   display: inline-block;
   margin: 5px 10px;
@@ -88,14 +84,42 @@ header img {
   transition: 0.15s;
 }
 
-#filters ul li:hover {
-  background-color: #f0f0f0;
+.filters ul li:hover {
+  border-color: black;
 }
 
-.selected {
-  background-color: #e0e0e0;
+/* Stili dark mode */
+.darkmode *:not(.post), .darkmode {
+  background-color: #3a3a3a;
+  color: white;
 }
 
+.darkmode .filters ul li {
+  border: 1px hidden black;
+}
+
+.darkmode .filters ul li:hover {
+  border-color: black;
+}
+
+.filters ul li.selected {
+  background-color: #cccccc !important;
+}
+
+.darkmode .filters ul li.selected {
+  background-color: #aaaaaa !important;
+}
+
+.filters ul li.selected {
+  color: black !important;
+}
+
+.darkmode .filters ul li.selected {
+  color: white !important;
+}
+
+
+/* Stile articolo */
 article {
   height: 100%;
   width: 100%;
