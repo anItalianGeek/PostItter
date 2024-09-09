@@ -30,28 +30,27 @@
    ```
 
 2. **Set Up the Backend:**
-   - Navigate to the backend directory:
-     ```bash
-     cd Post-itter/backend
-     ```
+   - Clone the backend repository:
+   ```bash
+   git clone https://github.com/anItalianGeek/PostItter_RESTfulAPI.git
+   ```
+   - Get the backend from 
+   - Navigate to the backend directory.
    - Restore dependencies and run the application:
      ```bash
      dotnet restore
      dotnet run
      ```
 
-3. **Set Up the Frontend:**
-   - Navigate to the frontend directory:
-     ```bash
-     cd Post-itter/frontend
-     ```
+4. **Set Up the Frontend:**
+   - Navigate to the frontend directory.
    - Install dependencies and start the development server:
      ```bash
      npm install
      ng serve
      ```
 
-4. **Configure the Database:**
+5. **Configure the Database:**
    - Import the initial data using the provided SQL file (if available).
    - Update database connection settings in the backend configuration files.
 
