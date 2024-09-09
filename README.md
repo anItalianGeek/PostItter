@@ -9,7 +9,6 @@
 - **Notifications**: Receive updates on likes, retweets, mentions, and new followers.
 - **Direct Messages**: Engage in real-time chats with other users.
 - **User Profiles**: View and edit profiles, including posts, followers, and following.
-- **Lists**: Organize users into lists for better management.
 - **Settings Dashboard**: Adjust user settings and preferences.
 
 ## Getting Started
