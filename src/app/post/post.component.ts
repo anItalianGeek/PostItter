@@ -14,6 +14,7 @@ export class PostComponent implements OnInit, AfterViewInit {
   @Input() post!: PostData;
   @Input() currentUser!: UserData;
   @ViewChild('postref', {static: false}) postRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('likeBtn', {static: false}) likeBtn!: ElementRef<HTMLImageElement>;
   @ViewChild('postcontent1', {static: false}) postContent1!: ElementRef<HTMLDivElement>;
   @ViewChild('postcontent2', {static: false}) postContent2!: ElementRef<HTMLDivElement>;
   @ViewChild('postcontent3', {static: false}) postContent3!: ElementRef<HTMLDivElement>;
@@ -30,12 +31,12 @@ export class PostComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     let id: string = (JSON.parse(localStorage.getItem('auth-token')!)).sub;
     this.ownedByActiveUser = this.post.user.id === id;
-    if (this.currentUser.likedPosts?.find(e => e.id === this.post.id))
-      (document.getElementsByClassName('icon')[0].firstElementChild as HTMLImageElement).src = '/icons/heart-liked.png';
   }
 
   ngAfterViewInit() {
     this.postRef.nativeElement.style.backgroundColor = this.post.color!;
+    if (this.currentUser.likedPosts?.find(e => e.id === this.post.id))
+      this.likeBtn.nativeElement.src = '/icons/heart-liked.png';
   }
 
   triggerUserOptions(): void {
