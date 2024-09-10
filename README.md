@@ -30,10 +30,9 @@
 
 2. **Set Up the Backend:**
    - Clone the backend repository:
-   ```bash
-   git clone https://github.com/anItalianGeek/PostItter_RESTfulAPI.git
-   ```
-   - Get the backend from 
+     ```bash
+     git clone https://github.com/anItalianGeek/PostItter_RESTfulAPI.git
+     ```
    - Navigate to the backend directory.
    - Restore dependencies and run the application:
      ```bash
@@ -41,7 +40,7 @@
      dotnet run
      ```
 
-4. **Set Up the Frontend:**
+3. **Set Up the Frontend:**
    - Navigate to the frontend directory.
    - Install dependencies and start the development server:
      ```bash
@@ -49,18 +48,30 @@
      ng serve
      ```
 
-5. **Configure the Database:**
+4. **Configure the Database:**
    - Import the initial data using the provided SQL file (if available).
    - Update database connection settings in the backend configuration files.
 
 ## Usage
 
 - **Home Page**: View and interact with posts. Use the navigation bar to explore other sections.
-- **Search Page**: Search and Filter by posts, users, and hashtags.
+- **Search Page**: Search and filter by posts, users, and hashtags.
 - **Notifications Dashboard**: Monitor updates related to your activity.
 - **Chat Dashboard**: Access and manage real-time conversations.
 - **Profile Page**: View your profile, posts, likes, comments, and more.
 - **Settings Dashboard**: Modify your account settings.
+
+## Upcoming Features for Future Versions
+
+In the next version of Post-itter, we plan to introduce the following features:
+
+- **Post Selection Algorithm**: An advanced algorithm to display posts based on user popularity and interests.
+- **Responsive UI**: Improved user interface for all devices. Currently, the app is best experienced on larger screens like desktops.
+- **Repost Feature**: Ability to repost content from other users.
+- **Profile Tooltip in Chats**: Hovering over a user in the chat will display a tooltip with quick profile details and navigation options.
+- **Chat Member Management**: Buttons in chats to view members, rename the chat, and remove users from the chat.
+- **Popular Posts Page**: A page dedicated to showcasing the most popular posts at the moment.
+- **Interest-Based Content** or **More User-Interest focused Homepage**: Consideration for either a dedicated section or a homepage tailored to user interests.
 
 ## Contributing
 
