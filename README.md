@@ -70,6 +70,7 @@ In the next version of Post-itter, we plan to introduce the following features:
 - **Repost Feature**: Ability to repost content from other users.
 - **Profile Tooltip in Chats**: Hovering over a user in the chat will display a tooltip with quick profile details and navigation options.
 - **Chat Member Management**: Buttons in chats to view members, rename the chat, and remove users from the chat.
+- **Media messages support**: Users will be able to share photos and videos in the chats, that is currently not available because I don't have a cloud. I plan to use AWS S3, so a bucket is what i need, to store content.
 - **Popular Posts Page**: A page dedicated to showcasing the most popular posts at the moment.
 - **Interest-Based Content** or **More User-Interest focused Homepage**: Consideration for either a dedicated section or a homepage tailored to user interests.
 
