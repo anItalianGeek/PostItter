@@ -80,3 +80,7 @@ Contributions are welcome! Feel free to fork the repository and submit pull requ
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Known Issues
+
+During development, significant issues were encountered related to CORS (Cross-Origin Resource Sharing). Multiple solutions were attempted without success. Eventually, a workaround was found by bypassing CORS issues through disabling security checks on the API side and omitting token authorization in requests. Note that this approach should be reconsidered for production environments to ensure proper security measures are in place.
