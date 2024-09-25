@@ -77,8 +77,11 @@ export class UserService {
             newWindow.document.close();
           } else {
             console.error('Unable to open new window');
+            return;
           }
         }
+
+        location.reload();
       });
   }
 
