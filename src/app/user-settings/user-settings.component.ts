@@ -233,8 +233,11 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   removeTwoFA(): void {
-    if (confirm("Are you really sure you want to completely remove Two Factor Authentication? (This will remove your personal secret key)"))
+    if (confirm("Are you really sure you want to completely remove Two Factor Authentication? (This will remove your personal secret key)")) {
       this.userService.removeTwoFA();
+      this.user.twoFA = false;
+      this.twoFACB.nativeElement.checked = false;
+    }
   }
 
   deleteAccount(): void {

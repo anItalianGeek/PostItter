@@ -98,6 +98,7 @@ app-post {
 .create-post textarea {
   width: 455px;
   height: 200px;
+  padding: 15px;
   border-radius: 15px;
   resize: none;
 }

@@ -30,13 +30,15 @@ export class UserService {
   getFollowers(id: string): Observable<UserData[] | undefined> {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    return this.http.get<UserData[]>(this.url + '/api/users/' + id + '/followers');
+    const params = new HttpParams().set('id_current_user', JSON.parse(jwt!).sub);
+    return this.http.get<UserData[]>(this.url + '/api/users/' + id + '/followers', {params: params});
   }
 
   getFollowing(id: string): Observable<UserData[] | undefined> {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
-    return this.http.get<UserData[]>(this.url + '/api/users/' + id + '/following');
+    const params = new HttpParams().set('id_current_user', JSON.parse(jwt!).sub);
+    return this.http.get<UserData[]>(this.url + '/api/users/' + id + '/following', {params: params});
   }
 
   blockUser(id: string, userData: UserData): void {

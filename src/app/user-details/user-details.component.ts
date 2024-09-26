@@ -103,7 +103,11 @@ export class UserDetailsComponent implements OnInit {
 
   message(): void {
     this.userObservable.subscribe(user => {
-      this.messageService.createChat(user.id).subscribe(response => this.router.navigateByUrl('/chats/' + response.chatId));
+      try {
+        this.messageService.createChat(user.id).subscribe(response => this.router.navigateByUrl('/chats/' + response.chatId));
+      } catch (err) {
+        console.error(err);
+      }
     })
   }
 

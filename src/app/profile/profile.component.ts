@@ -58,6 +58,7 @@ export class ProfileComponent implements OnInit {
         break;
       case 2:
         // reposting not implemented yet!!
+        this.userObservable.subscribe(user => this.postsObservable = of([]))
         break;
       case 3:
         this.userObservable.subscribe(user => this.postsObservable = of(user.posts!));

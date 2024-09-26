@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {PostService} from "../../services/post.service";
 import {UserData} from "../../UserData";
 import {UserService} from "../../services/user.service";
-import {map, Observable} from "rxjs";
+import {map, Observable, of, switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-post-detail',
@@ -87,43 +87,29 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   likeDetail(event: Event): void {
     const target = event.target as HTMLImageElement;
 
-    if (target.src.endsWith('/icons/heart.png')) {
-      this.currentUserObservable = this.currentUserObservable.pipe(
-        map(user => {
-          this.postDataObservable = this.postDataObservable.pipe(
-            map(post => {
-              if (user.likedPosts)
-                user.likedPosts.push(post);
-              else
-                user.likedPosts = [post];
+    this.currentUserObservable.pipe(
+      switchMap(user => this.postDataObservable.pipe(
+        map(post => ({user, post}))
+      )),
+      tap(({user, post}) => {
+        if (target.src.endsWith('/icons/heart.png')) {
+          if (user.likedPosts) {
+            user.likedPosts.push(post);
+          } else {
+            user.likedPosts = [post];
+          }
+          this.postService.updatePost(post, 'add-like');
+          target.src = '/icons/heart-liked.png';
+        } else {
+          user.likedPosts = user.likedPosts?.filter(element => element.id !== post.id);
+          this.postService.updatePost(post, 'remove-like');
+          target.src = '/icons/heart.png';
+        }
 
-              this.postService.updatePost(post, 'add-like');
-              post.likes++;
-
-              return post;
-            })
-          );
-          return user;
-        })
-      )
-      target.src = '/icons/heart-liked.png';
-    } else {
-      this.currentUserObservable = this.currentUserObservable.pipe(
-        map(user => {
-          this.postDataObservable = this.postDataObservable.pipe(
-            map(post => {
-              user.likedPosts = user.likedPosts?.filter(element => element.id !== post.id);
-              this.postService.updatePost(post, 'remove-like');
-              post.likes--;
-
-              return post;
-            })
-          );
-          return user;
-        })
-      );
-      target.src = '/icons/heart.png';
-    }
+        this.postDataObservable = of(post);
+        this.currentUserObservable = of(user);
+      })
+    ).subscribe();
   }
 
   commentDetail(): void {

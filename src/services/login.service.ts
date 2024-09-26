@@ -38,6 +38,7 @@ export class LoginService {
     const jwt = localStorage.getItem('auth-token');
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + jwt});
     this.http.delete(this.url + '/api/authguard/logout/' + (JSON.parse(jwt!)).sub).subscribe();
+    localStorage.removeItem('app-theme');
     localStorage.removeItem('auth-token');
     this.router.navigateByUrl('/login');
   }
