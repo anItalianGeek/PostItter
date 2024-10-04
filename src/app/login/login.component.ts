@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.usernameAvailable = response[0];
       this.emailAvailable = response[1];
     });
-
   }
 
   ngOnInit() {
@@ -67,21 +66,30 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.requestCode = true;
       } else {
         this.loginService.logIn(payload).subscribe(response => {
-          localStorage.setItem('auth-token', JSON.stringify(response));
-          localStorage.removeItem('temp-email');
-          this.router.navigateByUrl('/home');
-        });
+            localStorage.setItem('auth-token', JSON.stringify(response));
+            localStorage.removeItem('temp-email');
+            this.router.navigateByUrl('/home');
+          },
+          error => {
+            alert("Wrong Information Inserted Try Again.");
+            location.reload();
+          }
+        );
       }
     });
   }
 
   logInWith2faCode(code: string) {
     this.loginService.logInWith2faCode(code).subscribe(response => {
-      localStorage.setItem('auth-token', JSON.stringify(response));
-      localStorage.removeItem('temp-email');
-      this.requestCode = false;
-      this.router.navigateByUrl('/home');
-    });
+        localStorage.setItem('auth-token', JSON.stringify(response));
+        localStorage.removeItem('temp-email');
+        this.requestCode = false;
+        this.router.navigateByUrl('/home');
+      },
+      error => {
+        alert("Wrong Information Inserted Try Again.");
+        location.reload();
+      });
   }
 
   signUp(): void {

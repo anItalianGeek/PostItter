@@ -3,7 +3,7 @@ import {UserData} from "../../UserData";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {LoginService} from "../../services/login.service";
-import {Observable} from "rxjs";
+import {debounceTime, Observable, Subject, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-user-settings',
@@ -36,6 +36,8 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   deletionMessage: string = "";
   changesWereMade: boolean = false;
   showBlockedUsers: boolean = false;
+  newSelectedUsernameAvailable: boolean = false;
+  proposedUsernames: Subject<string> = new Subject<string>();
   checkComponentLoad: any;
   interval: any;
 
@@ -59,6 +61,13 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.proposedUsernames.pipe(
+      debounceTime(400),
+      switchMap((proposedUsername: string) => this.loginService.checkDataAvailability(proposedUsername, ""))
+    ).subscribe(response => {
+      this.newSelectedUsernameAvailable = response[0];
+    });
+
     this.userDataObservable = this.userService.getUserById((JSON.parse(localStorage.getItem('auth-token')!)).sub);
     this.userDataObservable.subscribe(res => {
       this.user = res;
@@ -120,6 +129,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.proposedUsernames.complete();
     if (this.interval)
       clearInterval(this.interval);
   }
@@ -155,6 +165,13 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   saveChanges(): void {
+    if (this.changeUsername.nativeElement.value != '' && this.newSelectedUsernameAvailable)
+      this.user.username = this.changeUsername.nativeElement.value;
+    else {
+      alert("Cannot save changes. New proposed username is already taken.");
+      return;
+    }
+
     if (this.newPasswodInput && this.confirmPasswordInput) {
       if (this.newPasswodInput.nativeElement.value ==
         this.confirmPasswordInput.nativeElement.value)
@@ -163,8 +180,6 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
 
     if (this.changeBio.nativeElement.value != '')
       this.user.bio = this.changeBio.nativeElement.value;
-    if (this.changeUsername.nativeElement.value != '')
-      this.user.username = this.changeUsername.nativeElement.value;
     if (this.changeDisplayName.nativeElement.value != '')
       this.user.displayName = this.changeDisplayName.nativeElement.value;
     this.user.darkMode = this.darkModeCB.nativeElement.checked;

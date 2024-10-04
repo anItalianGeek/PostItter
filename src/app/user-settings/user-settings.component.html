@@ -25,7 +25,11 @@
       <h2>Essentials</h2>
       <div id="change-username">
         <span class="inline-blk">Change Username</span>
-        <input type="text" placeholder="{{user.username}}" #changeUsername (keyup)="startCheckingChanges()">
+        <input type="text" placeholder="{{user.username}}" #changeUsername
+               (keyup)="startCheckingChanges(); proposedUsernames.next(changeUsername.value)">
+      </div>
+      <div *ngIf="changeUsername.value != '' && !newSelectedUsernameAvailable" style="color: red;">Username Not
+        Available!
       </div>
       <div id="change-display-name">
         <span class="inline-blk">Change Display Name</span>
