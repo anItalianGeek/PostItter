@@ -69,6 +69,7 @@ In the next version of Post-itter, we plan to introduce the following features:
 - **Responsive UI**: Improved user interface for all devices. Currently, the app is best experienced on larger screens like desktops.
 - **Repost Feature**: Ability to repost content from other users.
 - **Profile Tooltip in Chats**: Hovering over a user in the chat will display a tooltip with quick profile details and navigation options.
+- **Exclusively private chats**: Currenty you can have either single or group chats, but in the next version it is planned to introduce exclusively private chats meaning that nobody outside will be able to join the chat. You will obviously be allowed to create group chats with the same person, but it will have to be another chat.
 - **Chat Member Management**: Buttons in chats to view members, rename the chat, and remove users from the chat.
 - **Media messages support**: Users will be able to share photos and videos in the chats, that is currently not available because I don't have a cloud. I plan to use AWS S3, so a bucket is what i need, to store content.
 - **Popular Posts Page**: A page dedicated to showcasing the most popular posts at the moment.
