@@ -165,11 +165,13 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   saveChanges(): void {
-    if (this.changeUsername.nativeElement.value != '' && this.newSelectedUsernameAvailable)
-      this.user.username = this.changeUsername.nativeElement.value;
-    else {
-      alert("Cannot save changes. New proposed username is already taken.");
-      return;
+    if (this.changeUsername.nativeElement.value != '') {
+      if (this.newSelectedUsernameAvailable)
+        this.user.username = this.changeUsername.nativeElement.value;
+      else {
+        alert("Cannot save changes. New proposed username is already taken.");
+        return;
+      }
     }
 
     if (this.newPasswodInput && this.confirmPasswordInput) {
