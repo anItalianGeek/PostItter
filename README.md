@@ -86,3 +86,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Known Issues
 
 During development, significant issues were encountered related to CORS (Cross-Origin Resource Sharing). Multiple solutions were attempted without success. Eventually, a workaround was found by bypassing CORS issues through disabling security checks on the API side and omitting token authorization in requests. Note that this approach should be reconsidered for production environments to ensure proper security measures are in place.
+
+Also, considering that i only dedicated slightly less than 2 months of time for this application, you will encounter some small bugs, however nothing is "dangerous" and nothing is going to compromise the usage of the social, obviously, i would focus on these little details, only if i had some more time to invest in this project.
