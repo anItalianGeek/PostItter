@@ -6,6 +6,8 @@
 > [CS nine Business Solutions](https://www.linkedin.com/company/csninegmbh/) at the end of
 > my internship in Vienna: a working social platform, three months, whatever state it's
 > in when the clock runs out. What follows is where it stood when time was up.
+>
+> Built inside the three-month limit the challenge set. It isn't production software.
 
 ## Features
 
