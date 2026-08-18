@@ -2,6 +2,11 @@
 
 **Post-itter** is a social media platform designed for sharing thoughts, connecting with users, and engaging in real-time conversations. Inspired by Twitter, it provides a seamless experience for posting updates, following other users, and interacting with content.
 
+> Built between June and September 2024 as a challenge set by
+> [CS nine Business Solutions](https://www.linkedin.com/company/csninegmbh/) at the end of
+> my internship in Vienna: a working social platform, three months, whatever state it's
+> in when the clock runs out. What follows is where it stood when time was up.
+
 ## Features
 
 - **Home Timeline**: View posts from users you follow, like, comment, and share.
@@ -83,8 +88,39 @@ Contributions are welcome! Feel free to fork the repository and submit pull requ
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Known Issues
+## Postmortem: the CORS problem
 
-During development, significant issues were encountered related to CORS (Cross-Origin Resource Sharing). Multiple solutions were attempted without success. Eventually, a workaround was found by bypassing CORS issues through disabling security checks on the API side and omitting token authorization in requests. Note that this approach should be reconsidered for production environments to ensure proper security measures are in place.
+Throughout development the app hit persistent CORS failures between the Angular dev
+server on `localhost:4200` and the .NET API on `localhost:8080`. At the time I worked
+around it by disabling CORS checks on the API and bypassing token authorization on
+requests. That was the wrong fix: it treated the symptom.
 
-Also, considering that i only dedicated slightly less than 2 months of time for this application, you will encounter some small bugs, however nothing is "dangerous" and nothing is going to compromise the usage of the social, obviously, i would focus on these little details, only if i had some more time to invest in this project.
+**The actual cause** wasn't the API's CORS configuration at all — it was the Angular dev
+server proxy. The proxy forwarded requests while keeping the original `Host` header, so
+the backend generated redirects with a `Location` pointing at its own origin. The browser
+followed that redirect out of the proxy's origin, the request genuinely became
+cross-origin, and preflight failed. No amount of server-side CORS configuration could fix
+it, because the problem was upstream, in the routing.
+
+**The correct fix**, in `proxy.conf.json`:
+
+```json
+{
+  "/api": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+```
+
+`changeOrigin: true` rewrites the `Host` header to match the target, so redirects the
+backend generates stay consistent with the origin the browser is actually talking to. The
+browser never leaves its own origin, CORS never enters the picture, and the token
+authorization — which is implemented in the code — works without any workaround.
+
+**What it taught me.** When the symptom is CORS, the cause is usually somewhere else:
+routing, proxying, or redirect handling. Turning off security checks to make an error
+disappear just moves the problem to where it costs more. This configuration is routine in
+my day job now. In 2024 it wasn't, and this section stays here to record that.
