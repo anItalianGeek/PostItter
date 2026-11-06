@@ -1,6 +1,6 @@
 # Post-itter
 
-**Post-itter** is a social media platform designed for sharing thoughts, connecting with users, and engaging in real-time conversations. Inspired by Twitter, it provides a seamless experience for posting updates, following other users, and interacting with content.
+**Post-itter** is a social media platform designed for sharing thoughts, connecting with users, and engaging in real-time conversations. Inspired by Twitter, it provides an interface for posting updates, following other users, and interacting with content.
 
 > Built between June and September 2024 as a challenge set by
 > [CS nine Business Solutions](https://www.linkedin.com/company/csninegmbh/) at the end of
@@ -11,84 +11,96 @@
 
 ## Features
 
-- **Home Timeline**: View posts from users you follow, like, comment, and share.
-- **Explore/Search**: Search for users, hashtags, and posts with advanced filtering.
-- **Notifications**: Receive updates on likes, retweets, mentions, and new followers.
-- **Direct Messages**: Engage in real-time chats with other users.
-- **User Profiles**: View and edit profiles, including posts, followers, and following.
-- **Settings Dashboard**: Adjust user settings and preferences.
+Interface modules developed during the three-month challenge:
+
+- **Home Timeline**: View posts, like, comment, and share (posts fetched from the API with randomized client sorting).
+- **Explore/Search**: Search for users, hashtags, and posts with filtering options.
+- **Notifications**: View updates on likes, reposts, mentions, and new followers.
+- **Direct Messages**: Real-time messaging with other users via SignalR.
+- **User Profiles**: View and edit user profiles, including posts, followers, and following lists.
+- **Settings Dashboard**: Adjust user preferences and application theme.
+
+## Architecture & Companion Services
+
+PostItter consists of three components:
+
+1. **Frontend**: Angular 18 Single Page Application (`@angular/cli ^18.0.6`).
+2. **Backend API**: ASP.NET Core 8 Web API with SignalR and MySQL ([anItalianGeek/PostItter_RESTfulAPI](https://github.com/anItalianGeek/PostItter_RESTfulAPI)), running by default on `http://localhost:5265`.
+3. **Chat WebSocket Proxy**: Dedicated Node.js Express proxy with `http-proxy-middleware` located in `proxy/chatSocketServer.js`. It runs on port 3000 and forwards WebSocket and HTTP requests to the backend API (`http://localhost:5265`) with CORS support for `http://localhost:4200`.
 
 ## Getting Started
 
 ### Prerequisites
 
-- **Node.js**: Latest stable version
-- **npm**: Latest version
-- **.NET SDK**: Version 8.0 stable
-- **MySQL**: Version 8.0.37
-- **SignalR**: Required for real-time messaging (configured via the proxy in the project)
+- **Node.js**: Versions supported by Angular CLI 18 tooling (`^18.19.1 || ^20.11.1 || >=22.0.0`, as specified in `package-lock.json` engines)
+- **npm**: Version compatible with lockfile v3
+- **Backend API**: Running instance of [PostItter_RESTfulAPI](https://github.com/anItalianGeek/PostItter_RESTfulAPI) on `http://localhost:5265` (.NET 8 SDK and MySQL; see backend repository for configuration instructions)
 
 ### Installation
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/username/Post-itter.git
+   git clone https://github.com/anItalianGeek/PostItter.git
+   cd PostItter
    ```
 
-2. **Set Up the Backend:**
-   - Clone the backend repository:
-     ```bash
-     git clone https://github.com/anItalianGeek/PostItter_RESTfulAPI.git
-     ```
-   - Navigate to the backend directory.
-   - Restore dependencies and run the application:
-     ```bash
-     dotnet restore
-     dotnet run
-     ```
+2. **Install Frontend Dependencies:**
+   ```bash
+   npm ci
+   ```
 
-3. **Set Up the Frontend:**
-   - Navigate to the frontend directory.
-   - Install dependencies and start the development server:
-     ```bash
-     npm install
-     ng serve
-     ```
+3. **Start the Chat WebSocket Proxy:**
+   Real-time chat functionality (`src/app/chat-detail`) connects to `http://localhost:3000/chatHub`. Start the dedicated Node proxy:
+   ```bash
+   npm ci --prefix proxy
+   node proxy/chatSocketServer.js
+   ```
+   *(Or navigate into `proxy` and run `node chatSocketServer.js`.)*
 
-4. **Configure the Database:**
-   - Import the initial data using the provided SQL file (if available).
-   - Update database connection settings in the backend configuration files.
+4. **Start the Frontend Development Server:**
+   In a separate terminal:
+   ```bash
+   npm start
+   ```
+   *(Runs `ng serve`). The application is available at `http://localhost:4200/`.*
+
+### Available Scripts
+
+- **`npm start`**: Runs `ng serve` to host the client locally at `http://localhost:4200/`.
+- **`npm run build`**: Runs `ng build` to create a production bundle in `dist/post-itter`.
+- **`npm run watch`**: Runs `ng build --watch --configuration development` for continuous compilation during development.
+- **`npm test`**: Runs unit tests via Karma / Jasmine (`ng test`).
 
 ## Usage
 
-- **Home Page**: View and interact with posts. Use the navigation bar to explore other sections.
+- **Home Page**: View and interact with posts. Use the navigation sidebar to explore other sections.
 - **Search Page**: Search and filter by posts, users, and hashtags.
-- **Notifications Dashboard**: Monitor updates related to your activity.
+- **Notifications Dashboard**: Monitor updates related to your account activity.
 - **Chat Dashboard**: Access and manage real-time conversations.
-- **Profile Page**: View your profile, posts, likes, comments, and more.
-- **Settings Dashboard**: Modify your account settings.
+- **Profile Page**: View your profile, posts, likes, comments, and follower details.
+- **Settings Dashboard**: Modify account settings and application appearance.
 
-## Upcoming Features for Future Versions
+## Design ideas and extensions from the original challenge
 
-In the next version of Post-itter, we plan to introduce the following features:
+These were possible extensions considered during the original three-month challenge. They are recorded here as design ideas, without a release commitment:
 
 - **Post Selection Algorithm**: An advanced algorithm to display posts based on user popularity and interests.
-- **Responsive UI**: Improved user interface for all devices. Currently, the app is best experienced on larger screens like desktops.
+- **Responsive UI**: Improved user interface for all devices. The prototype was primarily built and experienced on desktop screens.
 - **Repost Feature**: Ability to repost content from other users.
 - **Profile Tooltip in Chats**: Hovering over a user in the chat will display a tooltip with quick profile details and navigation options.
-- **Exclusively private chats**: Currenty you can have either single or group chats, but in the next version it is planned to introduce exclusively private chats meaning that nobody outside will be able to join the chat. You will obviously be allowed to create group chats with the same person, but it will have to be another chat.
-- **Chat Member Management**: Buttons in chats to view members, rename the chat, and remove users from the chat.
-- **Media messages support**: Users will be able to share photos and videos in the chats, that is currently not available because I don't have a cloud. I plan to use AWS S3, so a bucket is what i need, to store content.
-- **Popular Posts Page**: A page dedicated to showcasing the most popular posts at the moment.
-- **Interest-Based Content** or **More User-Interest focused Homepage**: Consideration for either a dedicated section or a homepage tailored to user interests.
+- **Exclusively private chats**: Dedicated 1-to-1 private chats where external users cannot be added, keeping group conversations separate.
+- **Chat Member Management**: In-chat controls to view members, rename the conversation, and manage membership.
+- **Media messages support**: Allowing users to share photos and videos in chats (designed around cloud storage such as an AWS S3 bucket).
+- **Popular Posts Page**: A dedicated page showcasing high-engagement posts.
+- **Interest-Based Content** or **More User-Interest focused Homepage**: Exploration of dedicated sections or homepage sorting tailored to user interests.
 
 ## Contributing
 
-Contributions are welcome! Feel free to fork the repository and submit pull requests. No specific contribution guidelines at the moment.
+Contributions are welcome! Feel free to fork the repository and submit pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. Note that a standalone `LICENSE` file is not currently tracked in the repository root.
 
 ## Postmortem: the CORS problem
 
